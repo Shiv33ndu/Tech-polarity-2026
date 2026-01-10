@@ -145,15 +145,28 @@ export default function ContactPage() {
                       </FormItem>
                     )}
                   />
-                  <div className="text-center">
+                 <div className="text-center">
   <Button
     type="submit"
     size="lg"
-    className="rounded-full bg-[#DBDBDB] text-black hover:bg-[#EC1B25] hover:text-white transition-colors"
+    className="
+      rounded-full 
+      bg-[#DBDBDB] 
+      text-black 
+      hover:bg-[#EC1B25] 
+      hover:text-white 
+      transition-all 
+      duration-300 
+      ease-out 
+      transform 
+      hover:scale-105
+      active:scale-95
+    "
   >
     Send Message <Send className="ml-2 h-4 w-4" />
   </Button>
 </div>
+
 
                 </form>
               </Form>
