@@ -13,15 +13,17 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/s
 import logo_main from '/public/logo_main.png';
 
 
-
-const LogoText = ({ className }: { className?: string }) => (
+const LogoText = ({ className = "" }: { className?: string }) => (
   <img
     src="/logo_main.png"
     alt="TechPolarit Logo"
-    className={className}
+    className={`h-20 w-auto object-contain ${className}`}
     draggable={false}
   />
 );
+
+export default LogoText;
+
 
 
 const navItems = ['AI', 'Gaming', 'Mobile', 'Software', 'Hardware', 'Science', 'Startups', 'Apple', 'Google'];
