@@ -54,7 +54,7 @@ export default function ArticlePage({ params }: { params: { slug:string } }) {
                 <div className="bg-card p-4 sm:p-6 md:p-12 rounded-3xl shadow-lg">
                   <article>
                       <header className="mb-8 text-center">
-                      <Badge variant="outline" className="mb-4 border-primary/50 text-primary px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl">{article.category}</Badge>
+                      <Badge variant="outline" className="mb-4 border-[#EC1B25] text-[#EC1B25] px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl">{article.category}</Badge>
                       <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-headline mb-4 leading-tight">
                           {article.title}
                       </h1>

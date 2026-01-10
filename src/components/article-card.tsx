@@ -72,7 +72,7 @@ export function ArticleCard({ article, isLarge = false, layout = 'vertical' }: A
           />
         </div>
         <CardContent className={`p-4 ${isLarge ? 'md:p-6' : ''}`}>
-          <h3 className={`font-bold font-headline group-hover:text-primary transition-colors ${titleSize}`}>
+          <h3 className={`font-bold font-headline group-hover:text-[#EC1B25] transition-colors ${titleSize}`}>
             {article.title}
           </h3>
           <p className={`text-muted-foreground text-sm mt-2 ${isLarge ? '' : 'hidden md:block'}`}>
