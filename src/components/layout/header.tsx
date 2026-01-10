@@ -87,7 +87,7 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
           className={cn(
             'rounded-full font-bold shrink-0',
             activeItem === item
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-[#EC1B25] text-primary-foreground'
               : 'text-muted-foreground hover:text-[#EC1B25] '
           )}
         >
