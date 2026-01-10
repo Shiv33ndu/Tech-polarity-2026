@@ -52,7 +52,6 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
     setActiveItem(getActiveItem());
   }, [activeCategory, pathname]);
 
-  /* 🔒 HYDRATION SAFE RANDOM SLUGS */
   const [randomArticleSlugs, setRandomArticleSlugs] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -126,37 +125,42 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
     <header className="bg-background border-b sticky top-0 z-40">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center gap-2">
-            <LogoText className="h-9 w-auto" />
 
+          {/* ✅ LOGO (never disappears) */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <LogoText className="h-8 w-auto" />
           </Link>
 
-          <div className="hidden md:flex items-center justify-center flex-1 space-x-2">
-            <div className="flex items-center space-x-2 flex-1 max-w-2xl">
+          {/* ✅ CENTER NAV (tablet safe) */}
+          <div className="hidden md:flex items-center justify-center flex-1 min-w-0 space-x-2">
+            <div className="flex items-center space-x-2 flex-1 max-w-2xl min-w-0">
               <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <div className="flex-1 overflow-hidden">
+
+              <div className="flex-1 overflow-hidden min-w-0">
                 <NavLinks />
               </div>
+
               <Button variant="ghost" size="icon" onClick={() => handleScroll('right')}>
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
 
-            <div className="relative left-18">
-  <Input
-    type="search"
-    placeholder="Search"
-    onFocus={(e) => (e.target.placeholder = '')}
-    onBlur={(e) => (e.target.placeholder = 'Search')}
-    className="pl-10 pr-4 w-50 bg-secondary rounded-full"
-  />
-  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
-</div>
-
+            {/* ✅ SEARCH (right aligned, tablet safe) */}
+            <div className="relative ml-auto shrink-0">
+              <Input
+                type="search"
+                placeholder="Search"
+                onFocus={(e) => (e.target.placeholder = '')}
+                onBlur={(e) => (e.target.placeholder = 'Search')}
+                className="pl-10 pr-4 w-50 bg-secondary rounded-full"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
+            </div>
           </div>
 
+          {/* MOBILE */}
           <div className="md:hidden flex items-center gap-2">
             <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
               <SheetTrigger asChild>
@@ -180,6 +184,7 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
               </SheetContent>
             </Sheet>
           </div>
+
         </div>
       </div>
     </header>
