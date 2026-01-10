@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 
 export function TrendingStories() {
   return (
-    <Card className="bg-primary text-primary-foreground border-none rounded-3xl">
+    <Card className="bg-[#EC1B25] text-primary-foreground border-none rounded-3xl">
       <CardHeader>
         <CardTitle className="text-2xl font-bold font-headline">Trending Story</CardTitle>
       </CardHeader>

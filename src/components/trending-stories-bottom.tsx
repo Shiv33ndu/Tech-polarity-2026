@@ -13,7 +13,7 @@ import { ARTICLES } from "@/lib/data";
 export function TrendingStoriesBottom() {
     const trendingArticles = ARTICLES.slice(0, 5);
   return (
-    <div className="bg-primary text-primary-foreground p-8 mt-12 rounded-3xl">
+    <div className="bg-[#EC1B25] text-primary-foreground p-8 mt-12 rounded-3xl">
         <h2 className="text-3xl font-bold mb-6 text-center font-headline">Trending Story</h2>
         <Carousel opts={{
             align: "start",

@@ -34,7 +34,7 @@ export function ScrollToTopButton() {
       <Button
         size="icon"
         className={cn(
-          'h-14 w-14 rounded-full shadow-lg transition-opacity',
+          'h-14 w-14 rounded-full shadow-lg transition-opacity bg-[#EC1B25] hover:bg-[#c8161f] text-white',
           isVisible ? 'opacity-100' : 'opacity-0'
         )}
         onClick={scrollToTop}
