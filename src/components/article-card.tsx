@@ -38,7 +38,7 @@ export function ArticleCard({ article, isLarge = false, layout = 'vertical' }: A
               />
             </div>
             <CardContent className="p-0 flex-1">
-              <h3 className="font-bold font-headline text-xl leading-tight group-hover:text-primary transition-colors">
+              <h3 className="font-bold font-headline text-xl leading-tight group-hover:text-[#EC1B25] transition-colors">
                 {article.title}
               </h3>
               <p className="text-muted-foreground text-sm mt-2 line-clamp-3">
