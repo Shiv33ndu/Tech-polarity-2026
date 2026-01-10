@@ -14,7 +14,7 @@ const LogoText = ({ className = "" }: { className?: string }) => (
   <img
     src="/logo_main.png"
     alt="TechPolarit Logo"
-    className={`h-20 w-auto object-contain ${className}`}
+    className={`h-9 w-auto object-contain ${className}`}
     draggable={false}
   />
 );
@@ -22,9 +22,9 @@ const LogoText = ({ className = "" }: { className?: string }) => (
 export default LogoText;
 
 const navItems = [
-  'AI', 'Gaming', 'Mobile', 'Software', 'Hardware', 'Science', 'Startups',
-  'Apple', 'Google', 'Microsoft', 'Meta', 'Amazon', 'Cybersecurity',
-  'Programming', 'Gadgets', 'Reviews', 'Virtual Reality', 'Augmented Reality'
+  'AI','Gaming','Mobile','Software','Hardware','Science','Startups',
+  'Apple','Google','Microsoft','Meta','Amazon','Cybersecurity',
+  'Programming','Gadgets','Reviews','Virtual Reality','Augmented Reality'
 ];
 
 export function Header({ activeCategory }: { activeCategory?: string }) {
@@ -37,7 +37,6 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
     if (activeCategory) return activeCategory;
     const path = pathname.split('/')[1];
     const slug = pathname.split('/article/')[1];
-
     if (path === 'article' && slug) {
       const article = ARTICLES.find(a => a.slug === slug);
       if (article) {
@@ -53,11 +52,11 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
     setActiveItem(getActiveItem());
   }, [activeCategory, pathname]);
 
-  const [randomArticleSlugs, setRandomArticleSlugs] = useState<Record<string, string>>({});
+  const [randomArticleSlugs, setRandomArticleSlugs] = useState<Record<string,string>>({});
 
   useEffect(() => {
     if (!ARTICLES.length) return;
-    const slugs: Record<string, string> = {};
+    const slugs: Record<string,string> = {};
     navItems.forEach(item => {
       const list = ARTICLES.filter(a => a.category.includes(item));
       const random = list.length
@@ -68,10 +67,10 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
     setRandomArticleSlugs(slugs);
   }, []);
 
-  const handleScroll = (direction: 'left' | 'right') => {
+  const handleScroll = (dir:'left'|'right') => {
     scrollContainerRef.current?.scrollBy({
-      left: direction === 'left' ? -200 : 200,
-      behavior: 'smooth',
+      left: dir === 'left' ? -200 : 200,
+      behavior: 'smooth'
     });
   };
 
@@ -91,7 +90,7 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
           className={cn(
             'rounded-full font-bold shrink-0',
             activeItem === item
-              ? 'bg-[#EC1B25] text-primary-foreground'
+              ? 'bg-[#EC1B25] text-white'
               : 'text-muted-foreground hover:text-[#EC1B25]'
           )}
         >
@@ -108,12 +107,14 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-20">
 
-          {/* Logo */}
-          <Link href="/" className="shrink-0 flex items-center">
-            <LogoText className="h-9 w-auto" />
-          </Link>
+          {/* LEFT (fixed width) */}
+          <div className="w-[220px] flex items-center">
+            <Link href="/" className="flex items-center">
+              <LogoText />
+            </Link>
+          </div>
 
-          {/* Center nav */}
+          {/* CENTER */}
           <div className="hidden md:flex flex-1 justify-center px-6">
             <div className="flex items-center max-w-5xl w-full">
               <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
@@ -124,32 +125,25 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
                 <NavLinks />
               </div>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleScroll('right')}
-                className="ml-auto"
-              >
+              <Button variant="ghost" size="icon" onClick={() => handleScroll('right')}>
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
-          {/* Desktop search */}
-          <div className="hidden md:flex shrink-0">
+          {/* RIGHT (fixed width → alignment fix) */}
+          <div className="hidden md:flex w-[220px] justify-end">
             <div className="relative">
               <Input
                 type="search"
                 placeholder="Search"
-                onFocus={(e) => (e.target.placeholder = '')}
-                onBlur={(e) => (e.target.placeholder = 'Search')}
                 className="pl-10 pr-4 w-56 bg-secondary rounded-full"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
             </div>
           </div>
 
-          {/* Mobile */}
+          {/* MOBILE */}
           <div className="md:hidden ml-auto flex items-center gap-2">
             <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
               <SheetTrigger asChild>
@@ -157,21 +151,12 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
                   <Search className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-
-              {/* 🔥 DEFAULT SHEET CLOSE HIDDEN HERE */}
               <SheetContent side="top" className="pt-6 [&>button]:hidden">
                 <div className="relative">
-                  <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="w-full rounded-full pr-12"
-                  />
-
-                  {/* Custom aligned close */}
+                  <Input className="w-full rounded-full pr-12" placeholder="Search..." />
                   <button
                     onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label="Close search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
                   >
                     ✕
                   </button>
