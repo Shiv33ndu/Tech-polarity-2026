@@ -21,7 +21,7 @@ const LogoText = ({ className = "" }: { className?: string }) => (
 
 export default LogoText;
 
-const navItems = ['AI', 'Gaming', 'Mobile', 'Software', 'Hardware', 'Science', 'Startups', 'Apple', 'Google'];
+const navItems = ['AI', 'Gaming', 'Mobile', 'Software', 'Hardware', 'Science', 'Startups', 'Apple', 'Google', 'Microsoft', 'Meta', 'Amazon',  'Cybersecurity', 'Programming', 'Gadgets', 'Reviews', 'Virtual Reality', 'Augmented Reality'];
 
 export function Header({ activeCategory }: { activeCategory?: string }) {
   const pathname = usePathname();
