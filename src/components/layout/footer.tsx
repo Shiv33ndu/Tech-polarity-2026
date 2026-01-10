@@ -96,19 +96,19 @@ export function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t flex flex-col items-center text-muted-foreground">
           <div className="flex items-center justify-center space-x-6">
-            <Link href="/about" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/about" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-[#EC1B25] transition-colors">
               <Button variant="outline" size="icon" className="rounded-full h-12 w-12">
                 <Info className="h-5 w-5" />
               </Button>
               <span className="text-sm font-medium">About</span>
             </Link>
-            <Link href="/privacy" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/privacy" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-[#EC1B25] transition-colors">
               <Button variant="outline" size="icon" className="rounded-full h-12 w-12">
                 <Shield className="h-5 w-5" />
               </Button>
               <span className="text-sm font-medium">Privacy</span>
             </Link>
-            <Link href="/contact" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/contact" className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-[#EC1B25] transition-colors">
               <Button variant="outline" size="icon" className="rounded-full h-12 w-12">
                 <Mail className="h-5 w-5" />
               </Button>

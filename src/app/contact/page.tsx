@@ -146,10 +146,15 @@ export default function ContactPage() {
                     )}
                   />
                   <div className="text-center">
-                    <Button type="submit" size="lg" className="rounded-full">
-                      Send Message <Send className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
+  <Button
+    type="submit"
+    size="lg"
+    className="rounded-full bg-[#DBDBDB] text-black hover:bg-[#EC1B25] hover:text-white transition-colors"
+  >
+    Send Message <Send className="ml-2 h-4 w-4" />
+  </Button>
+</div>
+
                 </form>
               </Form>
             </div>
