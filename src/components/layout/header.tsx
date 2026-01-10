@@ -109,22 +109,29 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
             <LogoText className="h-9 w-auto" />
           </Link>
 
-          {/* Center nav */}
-          <div className="hidden md:flex flex-1 justify-center px-6">
-            <div className="flex items-center max-w-2xl w-full">
-              <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
+         {/* Center nav */}
+<div className="hidden md:flex flex-1 justify-center px-6">
+  <div className="flex items-center max-w-5xl w-full">
+    <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
+      <ChevronLeft className="h-5 w-5" />
+    </Button>
 
-              <div className="flex-1 overflow-hidden">
-                <NavLinks />
-              </div>
+    <div className="flex-1 overflow-hidden">
+      <NavLinks />
+    </div>
 
-              <Button variant="ghost" size="icon" onClick={() => handleScroll('right')}>
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => handleScroll('right')}
+      className="ml-auto"
+    >
+      <ChevronRight className="h-5 w-5" />
+    </Button>
+  </div>
+</div>
+
+
 
           {/* Search – TRUE right aligned */}
           <div className="hidden md:flex shrink-0">
