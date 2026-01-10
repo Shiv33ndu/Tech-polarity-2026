@@ -88,7 +88,7 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
             'rounded-full font-bold shrink-0',
             activeItem === item
               ? 'bg-primary text-primary-foreground'
-              : 'text-muted-foreground hover:text-[#EC1B25] hover:bg-[#EC1B25]'
+              : 'text-muted-foreground hover:text-[#EC1B25] '
           )}
         >
           <Link href={randomArticleSlugs[item] ? `/article/${randomArticleSlugs[item]}` : '#'}>
