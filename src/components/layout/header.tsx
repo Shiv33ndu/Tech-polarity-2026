@@ -143,14 +143,17 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
               </Button>
             </div>
 
-            <div className="relative">
-              <Input
-                type="search"
-                placeholder="Search"
-                className="pl-10 pr-4 w-32 bg-secondary rounded-full"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
-            </div>
+            <div className="relative left-18">
+  <Input
+    type="search"
+    placeholder="Search"
+    onFocus={(e) => (e.target.placeholder = '')}
+    onBlur={(e) => (e.target.placeholder = 'Search')}
+    className="pl-10 pr-4 w-50 bg-secondary rounded-full"
+  />
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
+</div>
+
           </div>
 
           <div className="md:hidden flex items-center gap-2">
