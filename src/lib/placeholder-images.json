@@ -1,0 +1,70 @@
+{
+  "placeholderImages": [
+    {
+      "id": "article_1",
+      "description": "A stylish mechanical keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1558050032-160f36233a07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtZWNoYW5pY2FsJTIwa2V5Ym9hcmR8ZW58MHx8fHwxNzY3ODExMjY4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mechanical keyboard"
+    },
+    {
+      "id": "article_2",
+      "description": "A different mechanical keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1660680380969-d9727d4544f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjdXN0b20lMjBrZXlib2FyZHxlbnwwfHx8fDE3Njc4NDUxNzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "custom keyboard"
+    },
+    {
+      "id": "article_3",
+      "description": "A compact mechanical keyboard",
+      "imageUrl": "https://picsum.photos/seed/keyboard3/800/600",
+      "imageHint": "60% keyboard"
+    },
+    {
+      "id": "article_4",
+      "description": "A gaming keyboard with RGB lighting",
+      "imageUrl": "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjBrZXlib2FyZHxlbnwwfHx8fDE3Njc4MzI0NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming keyboard"
+    },
+    {
+      "id": "article_5",
+      "description": "An ergonomic split keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1637243218392-33e083e38b6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlcmdvbm9taWMlMjBrZXlib2FyZHxlbnwwfHx8fDE3Njc3Nzc0NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ergonomic keyboard"
+    },
+    {
+      "id": "article_6",
+      "description": "A vintage-style keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1762721084447-062e761e6dfb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aW50YWdlJTIwa2V5Ym9hcmR8ZW58MHx8fHwxNzY3ODQ1MTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vintage keyboard"
+    },
+    {
+      "id": "demo_article_hero",
+      "description": "Hero image for a demo article",
+      "imageUrl": "https://images.unsplash.com/photo-1510906594845-bc082582c8cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx0ZWNoJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzY3ODAzNTg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tech abstract"
+    },
+    {
+      "id": "contact_hero",
+      "description": "Hero image for a contact page",
+      "imageUrl": "https://images.unsplash.com/photo-1554224155-1696413565d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b3Jrc3BhY2V8ZW58MHx8fHwxNzY4MjAyNzUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "workspace"
+    },
+    {
+      "id": "article_7",
+      "description": "A modern gaming mouse",
+      "imageUrl": "https://images.unsplash.com/photo-1628832307345-7404b47f1751?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjBtb3VzZXxlbnwwfHx8fDE3Njc4MjUwNjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming mouse"
+    },
+    {
+      "id": "article_8",
+      "description": "A high-refresh-rate monitor",
+      "imageUrl": "https://images.unsplash.com/photo-1598986646512-9330bcc4c0dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2FtaW5nJTIwbW9uaXRvcnxlbnwwfHx8fDE3Njc4NjY2Mjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming monitor"
+    },
+    {
+      "id": "article_9",
+      "description": "A person holding a smartphone",
+      "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzbWFydHBob25lfGVufDB8fHx8MTc2NzgwNTgzMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone"
+    }
+  ]
+}
