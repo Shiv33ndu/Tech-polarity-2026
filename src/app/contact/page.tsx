@@ -6,6 +6,7 @@ import * as z from 'zod';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Send } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { submitContact } from '@/lib/api'; // ✅ IMPORT ADDED
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -37,8 +39,11 @@ const formSchema = z.object({
 
 export default function ContactPage() {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false); // ✅ LOADING STATE
+
   const image = PlaceHolderImages.find((img) => img.id === 'contact_hero');
-  const imageUrl = image?.imageUrl || 'https://picsum.photos/seed/contact/1200/600';
+  const imageUrl =
+    image?.imageUrl || 'https://picsum.photos/seed/contact/1200/600';
   const imageHint = image?.imageHint || 'contact abstract';
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,27 +55,50 @@ export default function ContactPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: 'Message Sent!',
-      description: "Thanks for reaching out. We'll get back to you soon.",
-    });
-    form.reset();
+  // ✅ UPDATED SUBMIT FUNCTION
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setLoading(true);
+
+      const res = await submitContact(values);
+
+      toast({
+        title: 'Message Sent!',
+        description:
+          res?.message ||
+          "Thanks for reaching out. We'll get back to you soon.",
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: 'Error',
+        description: 'Failed to send message. Try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+
       <main className="flex-grow py-4 sm:py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
+
             <Button asChild variant="ghost" className="mb-8 -ml-4 rounded-full">
               <Link href="/">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to home
               </Link>
             </Button>
+
             <div className="bg-card p-4 sm:p-6 md:p-12 rounded-3xl shadow-lg">
+
               <header className="mb-8 text-center">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-headline mb-4 leading-tight">
                   Contact Us
@@ -85,10 +113,11 @@ export default function ContactPage() {
                   src={imageUrl}
                   alt="Contact Us"
                   fill
+                  sizes="100vw"
                   className="object-cover"
-                  data-ai-hint={imageHint}
                 />
               </div>
+
               <div className="text-center -mt-8 mb-12">
                 <span className="inline-block bg-secondary text-secondary-foreground/80 text-xs px-3 py-1 rounded-full">
                   Image Credit: Unsplash
@@ -101,6 +130,7 @@ export default function ContactPage() {
                   className="space-y-8"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                     <FormField
                       control={form.control}
                       name="name"
@@ -114,6 +144,7 @@ export default function ContactPage() {
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={form.control}
                       name="email"
@@ -127,7 +158,9 @@ export default function ContactPage() {
                         </FormItem>
                       )}
                     />
+
                   </div>
+
                   <FormField
                     control={form.control}
                     name="message"
@@ -145,35 +178,39 @@ export default function ContactPage() {
                       </FormItem>
                     )}
                   />
-                 <div className="text-center">
-  <Button
-    type="submit"
-    size="lg"
-    className="
-      rounded-full 
-      bg-[#DBDBDB] 
-      text-black 
-      hover:bg-[#EC1B25] 
-      hover:text-white 
-      transition-all 
-      duration-300 
-      ease-out 
-      transform 
-      hover:scale-105
-      active:scale-95
-    "
-  >
-    Send Message <Send className="ml-2 h-4 w-4" />
-  </Button>
-</div>
 
+                  <div className="text-center">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="
+                        rounded-full 
+                        bg-[#DBDBDB] 
+                        text-black 
+                        hover:bg-[#EC1B25] 
+                        hover:text-white 
+                        transition-all 
+                        duration-300 
+                        ease-out 
+                        transform 
+                        hover:scale-105
+                        active:scale-95
+                      "
+                    >
+                      {loading ? 'Sending...' : 'Send Message'}
+                      <Send className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
 
                 </form>
               </Form>
+
             </div>
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );

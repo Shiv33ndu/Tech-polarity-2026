@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, XAxis, YAxis, Tooltip } from "recharts"
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, XAxis, YAxis, Tooltip } from "recharts";
+import { useEffect, useState } from "react";
 
 import {
   Card,
@@ -9,21 +10,44 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+
 import {
   ChartContainer,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { BAROMETER_DATA } from "@/lib/data"
+} from "@/components/ui/chart";
+
+import { getTechBarometer } from "@/lib/api";
 
 const chartConfig = {
   heat: {
     label: "Heat",
     color: "#EC1B25",
   },
-}
+};
 
 export function BarometerSidebar() {
+  const [data, setData] = useState<any[]>([]);
+
+ useEffect(() => {
+  async function load() {
+    const res = await getTechBarometer();
+
+    console.log("🔥 BAROMETER:", res);
+
+    if (Array.isArray(res)) {
+      const formatted = res.map((item: any) => ({
+        topic: item.label,   // ✅ FIX
+        heat: item.score,    // ✅ FIX
+      }));
+
+      setData(formatted);
+    }
+  }
+
+  load();
+}, []);
+
   return (
     <Card className="rounded-3xl border-none bg-secondary/50">
       <CardHeader>
@@ -37,10 +61,11 @@ export function BarometerSidebar() {
           What's hot in tech right now
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[250px]">
           <BarChart
-            data={BAROMETER_DATA}
+            data={data}
             layout="vertical"
             margin={{ left: 10, right: 0, top: 0, bottom: 0 }}
           >
@@ -49,22 +74,14 @@ export function BarometerSidebar() {
               type="category"
               tickLine={false}
               axisLine={false}
-              tick={{
-                fill: "hsl(var(--foreground))",
-                fontSize: 12,
-                opacity: 0.8,
-              }}
               width={100}
             />
             <XAxis dataKey="heat" type="number" hide />
-            <Tooltip
-              cursor={{ fill: "hsl(var(--accent))" }}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <Tooltip content={<ChartTooltipContent hideLabel />} />
             <Bar dataKey="heat" radius={5} fill="#EC1B25" />
           </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
