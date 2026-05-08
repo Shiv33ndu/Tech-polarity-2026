@@ -1,117 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { login } from "@/services/auth.service";
 
-export default function AdminLogin() {
+export default function AdminLoginPage() {
   const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (event: FormEvent) => {
+    event.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
-      const res = await axios.post(
-        "https://tech-polarity-backend.onrender.com/api/v1/auth/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // Swagger shows response is plain string
-      const token: string = res.data;
-
-      if (!token) {
-        throw new Error("No token received");
-      }
-
-      // Store token
-      localStorage.setItem("adminToken", token);
-
-      // OPTIONAL (better for middleware)
-      document.cookie = `adminToken=${token}; path=/`;
-
-      // Redirect
+      await login(email, password);
       router.push("/admin/dashboard");
-
-    } catch (err: any) {
-      console.error("Login Error:", err);
-
-      // Handle 422 validation error (from Swagger)
-      if (err.response?.status === 422) {
-        setError("Validation error: check email/password format ❌");
-      } else if (err.response?.status === 401) {
-        setError("Invalid credentials ❌");
-      } else {
-        setError("Something went wrong. Try again ❌");
-      }
-    } finally {
+    } catch (error) {
+      alert("Invalid credentials. Please check your email and password.");
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="bg-gray-900 p-8 rounded-2xl shadow-xl w-[400px]">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          Admin Login
-        </h2>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center">Admin Login</h1>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-4">{error}</p>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          {/* Email */}
+        <form className="space-y-4" onSubmit={handleLogin}>
           <input
             type="email"
-            name="email"
-            placeholder="admin@example.com"
-            className="w-full mb-4 p-3 rounded bg-gray-800"
-            onChange={handleChange}
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full rounded border border-gray-300 px-4 py-3 focus:border-black focus:outline-none"
           />
 
-          {/* Password */}
           <input
             type="password"
-            name="password"
-            placeholder="Enter password"
-            className="w-full mb-4 p-3 rounded bg-gray-800"
-            onChange={handleChange}
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-full rounded border border-gray-300 px-4 py-3 focus:border-black focus:outline-none"
           />
 
-          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 transition p-3 rounded font-semibold"
+            className="w-full rounded bg-black px-4 py-3 text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>
