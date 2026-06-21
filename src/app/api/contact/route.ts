@@ -3,7 +3,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const res = await fetch(
-      "https://tech-polarity-backend.onrender.com/api/v1/contact",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
       {
         method: "POST",
         headers: {

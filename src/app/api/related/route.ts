@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     }
 
     const res = await fetch(
-      `https://tech-polarity-backend.onrender.com/api/v1/home/related-articles?exclude_slug=${slug}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/home/related-articles?exclude_slug=${slug}`,
       {
         cache: "no-store",
       }

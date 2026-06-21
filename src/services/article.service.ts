@@ -1,4 +1,4 @@
-const BASE = "https://techpolarity-api.onrender.com/api/v1/articles";
+const BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/articles`;
 
 const getToken = () => {
   if (typeof window === "undefined") return null;

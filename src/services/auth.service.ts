@@ -1,4 +1,4 @@
-const BASE = "https://techpolarity-api.onrender.com/api/v1/auth";
+const BASE = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth`;
 
 const getCookieToken = () => {
   if (typeof document === "undefined") return null;

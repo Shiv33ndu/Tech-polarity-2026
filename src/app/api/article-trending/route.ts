@@ -6,7 +6,7 @@ export async function GET(req: Request) {
     if (!slug) return Response.json([]);
 
     const res = await fetch(
-      `https://tech-polarity-backend.onrender.com/api/v1/articles/${slug}/trending`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/articles/${slug}/trending`,
       { cache: "no-store" }
     );
 
