@@ -1,11 +1,16 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:9002";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  "https://tech-polarity-backend.onrender.com";
 
 // ================= MAIN ARTICLE =================
 export async function getMainArticle() {
   try {
-    const res = await fetch(`${BASE_URL}/api/main-article`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/main-article`,
+      {
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
       console.error("❌ Main API failed:", res.status);
@@ -25,8 +30,10 @@ export async function getRelatedArticles(slug?: string) {
     if (!slug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/related?slug=${slug}`,
-      { cache: "no-store" }
+      `${BASE_URL}/api/v1/home/related-articles?slug=${slug}`,
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) {
@@ -47,8 +54,10 @@ export async function getTrendingArticles(domain?: string) {
     if (!domain) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/trending?domain=${domain}`,
-      { cache: "no-store" }
+      `${BASE_URL}/api/v1/home/trending?domain=${domain}`,
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) {
@@ -63,15 +72,18 @@ export async function getTrendingArticles(domain?: string) {
   }
 }
 
-// ================= OPTIONAL: HEALTH CHECK =================
+// ================= HEALTH CHECK =================
 export async function healthCheck() {
   try {
-    const res = await fetch(`${BASE_URL}/api/health`);
+    const res = await fetch(
+      `${BASE_URL}/api/v1/health/`
+    );
 
     if (!res.ok) return null;
 
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error("❌ Health check error:", error);
     return null;
   }
 }
@@ -84,7 +96,7 @@ export async function submitContact(data: {
 }) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact/`,
+      `${BASE_URL}/api/v1/contact/`,
       {
         method: "POST",
         headers: {
@@ -95,7 +107,7 @@ export async function submitContact(data: {
     );
 
     if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
+      throw new Error(`HTTP Error: ${res.status}`);
     }
 
     return await res.json();
@@ -111,7 +123,7 @@ export async function submitContact(data: {
 export async function getArticleBySlug(slug: string) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:9002"}/api/article?slug=${slug}`,
+      `${BASE_URL}/api/v1/articles/${slug}`,
       {
         cache: "no-store",
       }
@@ -129,32 +141,46 @@ export async function getArticleBySlug(slug: string) {
   }
 }
 
-// ================= BAROMETER =================
-export async function getTechBarometer() {
-  try {
-    const res = await fetch("/api/barometer", {
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
 // ================= ARTICLE TRENDING =================
 export async function getArticleTrending(slug: string) {
   try {
-    const res = await fetch(`/api/article-trending?slug=${slug}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/${slug}/trending`,
+      {
+        cache: "no-store",
+      }
+    );
 
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error("❌ Article Trending API failed:", res.status);
+      return [];
+    }
 
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error("❌ Article Trending fetch error:", error);
+    return [];
+  }
+}
+
+// ================= RELATED ARTICLES BY SLUG =================
+export async function getArticleRelated(slug: string) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/${slug}/related`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.error("❌ Article Related API failed:", res.status);
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Article Related fetch error:", error);
     return [];
   }
 }
