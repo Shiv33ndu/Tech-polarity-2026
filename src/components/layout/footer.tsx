@@ -68,22 +68,22 @@ export function Footer() {
 
             <div className="flex items-center justify-center space-x-2">
                 <Button asChild variant="outline" size="icon" className="rounded-full">
-                    <a href="#" aria-label="Facebook">
+                    <a href="https://www.facebook.com/techpolarity" aria-label="Facebook">
                         <Facebook className="h-6 w-6" />
                     </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="rounded-full">
-                    <a href="#" aria-label="Youtube">
+                    <a href="www.youtube.com/@Techpolarity" aria-label="Youtube">
                         <Youtube className="h-6 w-6" />
                     </a>
                 </Button>
                  <Button asChild variant="outline" size="icon" className="rounded-full">
-                    <a href="#" aria-label="Instagram">
+                    <a href="https://www.instagram.com/techpolarity" aria-label="Instagram">
                         <Instagram className="h-6 w-6" />
                     </a>
                 </Button>
                  <Button asChild variant="outline" size="icon" className="rounded-full">
-                    <a href="#" aria-label="X (formerly Twitter)">
+                    <a href="https://x.com/techpolarity" aria-label="X (formerly Twitter)">
                         <X className="h-6 w-6" />
                     </a>
                 </Button>
