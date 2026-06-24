@@ -83,18 +83,27 @@ export async function submitContact(data: {
   message: string;
 }) {
   try {
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
 
     return await res.json();
   } catch (error) {
     console.error("❌ Contact submit error:", error);
-    return { message: "Failed to submit" };
+    return {
+      message: "Failed to submit contact form",
+    };
   }
 }
 
