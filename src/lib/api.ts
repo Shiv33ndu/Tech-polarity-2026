@@ -12,12 +12,16 @@ export async function getMainArticle() {
       }
     );
 
+    console.log("Status:", res.status);
+
+    const text = await res.text();
+    console.log("Response:", text);
+
     if (!res.ok) {
-      console.error("❌ Main API failed:", res.status);
       return null;
     }
 
-    return await res.json();
+    return JSON.parse(text);
   } catch (error) {
     console.error("❌ Main fetch error:", error);
     return null;
@@ -30,7 +34,7 @@ export async function getRelatedArticles(slug?: string) {
     if (!slug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/v1/home/related-articles?slug=${slug}`,
+      `${BASE_URL}/api/v1/home/related-articles?exclude_slug=${slug}&limit=8`,
       {
         cache: "no-store",
       }
@@ -49,12 +53,12 @@ export async function getRelatedArticles(slug?: string) {
 }
 
 // ================= TRENDING ARTICLES =================
-export async function getTrendingArticles(domain?: string) {
+export async function getTrendingArticles(domainSlug?: string) {
   try {
-    if (!domain) return [];
+    if (!domainSlug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/v1/home/trending?domain=${domain}`,
+      `${BASE_URL}/api/v1/home/trending?domain_slug=${domainSlug}&limit=5`,
       {
         cache: "no-store",
       }
@@ -182,5 +186,23 @@ export async function getArticleRelated(slug: string) {
   } catch (error) {
     console.error("❌ Article Related fetch error:", error);
     return [];
+  }
+}
+
+export async function getTechBarometer() {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/tech-barometer`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) return null;
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Tech Barometer error:", error);
+    return null;
   }
 }
