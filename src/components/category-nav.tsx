@@ -1,28 +1,37 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { CATEGORIES, ARTICLES } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://tech-polarity-backend.onrender.com";
+
+type Category = {
+  name: string;
+  slug: string;
+  order: number;
+  is_active: boolean;
+};
+
 export function CategoryNav() {
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
-  const [randomArticleSlugs, setRandomArticleSlugs] = useState<Record<string, string>>({});
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeSlug, setActiveSlug] = useState<string>('');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // ✅ CLIENT-ONLY randomization (fixes hydration)
   useEffect(() => {
-    if (ARTICLES.length === 0) return;
-
-    const slugs: Record<string, string> = {};
-    CATEGORIES.forEach(category => {
-      const randomArticle = ARTICLES[Math.floor(Math.random() * ARTICLES.length)];
-      slugs[category] = randomArticle.slug;
-    });
-
-    setRandomArticleSlugs(slugs);
+    fetch(`${BASE_URL}/api/v1/navigation/main`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCategories(data);
+          setActiveSlug(data[0].slug);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleScroll = (direction: 'left' | 'right') => {
@@ -40,23 +49,21 @@ export function CategoryNav() {
             ref={scrollContainerRef}
             className="flex items-center space-x-1 sm:space-x-2 py-2 overflow-x-auto whitespace-nowrap no-scrollbar pl-12 pr-12"
           >
-            {CATEGORIES.map((category, index) => (
+            {categories.map((cat, index) => (
               <Button
                 asChild
                 variant="ghost"
-                key={category}
+                key={cat.slug}
                 className={cn(
                   "rounded-full px-4 text-sm font-semibold shrink-0 transition-colors",
-                  activeCategory === category
+                  activeSlug === cat.slug
                     ? "bg-black text-white hover:bg-black hover:text-white"
                     : "text-black hover:text-[#EC1B25] hover:bg-white",
-                  index === CATEGORIES.length - 1 && "mr-4"
+                  index === categories.length - 1 && "mr-4"
                 )}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => setActiveSlug(cat.slug)}
               >
-                <Link href={`/article/${randomArticleSlugs[category] ?? ""}`}>
-                  {category}
-                </Link>
+                <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
               </Button>
             ))}
           </div>

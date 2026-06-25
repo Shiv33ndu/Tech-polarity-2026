@@ -4,7 +4,6 @@ import { ArrowLeft, Tag } from 'lucide-react';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { QuickOverview } from '@/components/quick-overview';
 import { RelatedArticles } from '@/components/related-articles';
 import { TrendingStories } from '@/components/trending-stories';
 import { Separator } from '@/components/ui/separator';
@@ -13,7 +12,8 @@ import { Button } from '@/components/ui/button';
 
 import {
   getArticleBySlug,
-  getArticleTrending, // ✅ FIXED
+  getArticleTrending,
+  getArticleRelated,
 } from '@/lib/api';
 
 export default async function ArticlePage({
@@ -23,21 +23,17 @@ export default async function ArticlePage({
 }) {
   let article: any = null;
   let trending: any[] = [];
+  let related: any[] = [];
 
   try {
-    // ✅ CORRECT API CALLS
-    const [articleRes, trendingRes] = await Promise.all([
+    const [articleRes, trendingRes, relatedRes] = await Promise.all([
       getArticleBySlug(params.slug),
-      getArticleTrending(params.slug), // ✅ FIXED
+      getArticleTrending(params.slug),
+      getArticleRelated(params.slug),
     ]);
 
-    console.log("🔥 ARTICLE:", articleRes);
-    console.log("🔥 TRENDING:", trendingRes);
-
-    // ❌ HANDLE NULL
     if (!articleRes) throw new Error("Article not found");
 
-    // ✅ MAP ARTICLE DATA
     article = {
       id: articleRes.slug,
       title: articleRes.title,
@@ -50,21 +46,23 @@ export default async function ArticlePage({
       content: articleRes.content || '',
     };
 
-    // ✅ SAFE TRENDING MAPPING
     const trendingData = Array.isArray(trendingRes) ? trendingRes : [];
+    trending = trendingData.filter((item: any) => item.slug);
 
-    trending = trendingData.map((item: any, index: number) => ({
-      id: index,
+    const relatedData = Array.isArray(relatedRes) ? relatedRes : [];
+    related = relatedData.map((item: any, index: number) => ({
+      id: item.slug || index,
       title: item.title,
-      slug: item.domain_slug || index.toString(), // ✅ FIXED
-      image: '/fallback.jpg',
+      description: item.description || '',
+      image: item.image?.url || '/fallback.jpg',
+      slug: item.slug,
+      publishedAt: item.published_at,
     }));
 
   } catch (error) {
     console.error('❌ API Error:', error);
   }
 
-  // ❌ NOT FOUND UI
   if (!article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center">
@@ -79,7 +77,11 @@ export default async function ArticlePage({
   }
 
   const formattedDate = article.publishedAt
-    ? new Date(article.publishedAt).toLocaleDateString()
+    ? new Date(article.publishedAt).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
     : '';
 
   return (
@@ -90,7 +92,6 @@ export default async function ArticlePage({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
 
-            {/* 🔙 BACK BUTTON */}
             <Button asChild variant="ghost" className="mb-8 -ml-4 rounded-full">
               <Link href="/">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to all articles
@@ -100,9 +101,8 @@ export default async function ArticlePage({
             <div className="bg-card p-4 sm:p-6 md:p-12 rounded-3xl shadow-lg">
               <article>
 
-                {/* 🔥 HEADER */}
                 <header className="mb-8 text-center">
-                  <Badge className="mb-4 border-[#EC1B25] text-black px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl">
+                  <Badge className="mb-4 border-[#EC1B25] text-black px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl capitalize">
                     {article.category}
                   </Badge>
 
@@ -115,7 +115,6 @@ export default async function ArticlePage({
                   </p>
                 </header>
 
-                {/* 🖼️ IMAGE */}
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">
                   <Image
                     src={article.image}
@@ -126,16 +125,15 @@ export default async function ArticlePage({
                   />
                 </div>
 
-                {/* 🔍 QUICK OVERVIEW */}
-                <QuickOverview />
-
-                {/* 📝 CONTENT */}
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90 mt-8">
-                  <p>{article.description}</p>
-                  {article.content && <p className="mt-4">{article.content}</p>}
+                  <p className="text-xl font-medium leading-relaxed">{article.description}</p>
+                  {article.content && (
+                    <div className="mt-6 whitespace-pre-wrap leading-relaxed">
+                      {article.content}
+                    </div>
+                  )}
                 </div>
 
-                {/* 🏷️ TAGS */}
                 {article.tags.length > 0 && (
                   <div className="mt-12">
                     <div className="flex items-center gap-2 mb-4">
@@ -144,7 +142,6 @@ export default async function ArticlePage({
                         Related Tags
                       </h4>
                     </div>
-
                     <div className="flex flex-wrap gap-2">
                       {article.tags.map((tag: string) => (
                         <Badge key={tag} variant="secondary">
@@ -156,24 +153,16 @@ export default async function ArticlePage({
                 )}
               </article>
 
-              {/* 🔥 RELATED ARTICLES */}
-              <div className="max-w-4xl mx-auto">
-                <RelatedArticles
-                  category={article.category}
-                  currentArticleSlug={article.slug}
-                />
-              </div>
+              <RelatedArticles data={related} />
 
-              {/* 🔥 TRENDING */}
               {trending.length > 0 && (
                 <div className="max-w-4xl mx-auto mt-16">
                   <Separator />
                   <div className="my-8">
                     <h2 className="text-3xl font-bold font-headline mb-8 text-center">
-                      Related Stories
+                      More in {article.category}
                     </h2>
-
-                    <TrendingStories  />
+                    <TrendingStories data={trending} />
                   </div>
                 </div>
               )}

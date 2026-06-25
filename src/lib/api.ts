@@ -1,18 +1,27 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:9002";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://tech-polarity-backend.onrender.com";
 
 // ================= MAIN ARTICLE =================
 export async function getMainArticle() {
   try {
-    const res = await fetch(`${BASE_URL}/api/main-article`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/main-article`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    console.log("Status:", res.status);
+
+    const text = await res.text();
+    console.log("Response:", text);
 
     if (!res.ok) {
-      console.error("❌ Main API failed:", res.status);
       return null;
     }
 
-    return await res.json();
+    return JSON.parse(text);
   } catch (error) {
     console.error("❌ Main fetch error:", error);
     return null;
@@ -25,8 +34,10 @@ export async function getRelatedArticles(slug?: string) {
     if (!slug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/related?slug=${slug}`,
-      { cache: "no-store" }
+      `${BASE_URL}/api/v1/home/related-articles?exclude_slug=${slug}&limit=8`,
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) {
@@ -42,13 +53,15 @@ export async function getRelatedArticles(slug?: string) {
 }
 
 // ================= TRENDING ARTICLES =================
-export async function getTrendingArticles(domain?: string) {
+export async function getTrendingArticles(domainSlug?: string) {
   try {
-    if (!domain) return [];
+    if (!domainSlug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/trending?domain=${domain}`,
-      { cache: "no-store" }
+      `${BASE_URL}/api/v1/home/trending?domain_slug=${domainSlug}&limit=5`,
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) {
@@ -63,15 +76,18 @@ export async function getTrendingArticles(domain?: string) {
   }
 }
 
-// ================= OPTIONAL: HEALTH CHECK =================
+// ================= HEALTH CHECK =================
 export async function healthCheck() {
   try {
-    const res = await fetch(`${BASE_URL}/api/health`);
+    const res = await fetch(
+      `${BASE_URL}/api/v1/health/`
+    );
 
     if (!res.ok) return null;
 
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error("❌ Health check error:", error);
     return null;
   }
 }
@@ -83,18 +99,27 @@ export async function submitContact(data: {
   message: string;
 }) {
   try {
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/contact/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP Error: ${res.status}`);
+    }
 
     return await res.json();
   } catch (error) {
     console.error("❌ Contact submit error:", error);
-    return { message: "Failed to submit" };
+    return {
+      message: "Failed to submit contact form",
+    };
   }
 }
 
@@ -102,7 +127,7 @@ export async function submitContact(data: {
 export async function getArticleBySlug(slug: string) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:9002"}/api/article?slug=${slug}`,
+      `${BASE_URL}/api/v1/articles/${slug}`,
       {
         cache: "no-store",
       }
@@ -120,32 +145,119 @@ export async function getArticleBySlug(slug: string) {
   }
 }
 
-// ================= BAROMETER =================
+// ================= ARTICLE TRENDING =================
+export async function getArticleTrending(slug: string) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/${slug}/trending`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.error("❌ Article Trending API failed:", res.status);
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Article Trending fetch error:", error);
+    return [];
+  }
+}
+
+// ================= RELATED ARTICLES BY SLUG =================
+export async function getArticleRelated(slug: string) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/${slug}/related`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.error("❌ Article Related API failed:", res.status);
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Article Related fetch error:", error);
+    return [];
+  }
+}
+
 export async function getTechBarometer() {
   try {
-    const res = await fetch("/api/barometer", {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/tech-barometer`,
+      {
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) return null;
 
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error("❌ Tech Barometer error:", error);
     return null;
   }
 }
 
-// ================= ARTICLE TRENDING =================
-export async function getArticleTrending(slug: string) {
+// ================= NAVIGATION CATEGORIES =================
+export async function getCategories() {
   try {
-    const res = await fetch(`/api/article-trending?slug=${slug}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/navigation/main`,
+      { next: { revalidate: 300 } }
+    );
 
     if (!res.ok) return [];
 
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error("❌ Categories fetch error:", error);
+    return [];
+  }
+}
+
+// ================= ARTICLES BY CATEGORY =================
+export async function getArticlesByCategory(
+  domainSlug: string,
+  page: number = 1,
+  limit: number = 12
+) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/category/${domainSlug}?page=${page}&limit=${limit}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return { items: [], total: 0, page, limit };
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Articles by category fetch error:", error);
+    return { items: [], total: 0, page, limit };
+  }
+}
+
+// ================= GLOBAL TRENDING =================
+export async function getGlobalTrending(limit: number = 8) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/trending-global?limit=${limit}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return [];
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Global trending fetch error:", error);
     return [];
   }
 }

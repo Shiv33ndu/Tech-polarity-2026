@@ -10,7 +10,7 @@ import { BarometerSidebar } from '@/components/barometer-sidebar';
 import {
   getMainArticle,
   getRelatedArticles,
-  getTrendingArticles,
+  getGlobalTrending,
 } from '@/lib/api';
 
 type Article = {
@@ -19,6 +19,7 @@ type Article = {
   description: string;
   image: string;
   slug: string;
+  domain_slug?: string;
   publishedAt?: string;
 };
 
@@ -48,13 +49,8 @@ export default async function Home() {
       ? await getRelatedArticles(main.slug)
       : [];
 
-    // ✅ TRENDING (always fetch with domain)
-    const trendingRes = await getTrendingArticles("tech");
+    const trendingRes = await getGlobalTrending(6);
 
-    console.log("🔥 RELATED:", relatedRes);
-    console.log("🔥 TRENDING:", trendingRes);
-
-    // ✅ RELATED ARTICLES
     const relatedData = Array.isArray(relatedRes) ? relatedRes : [];
 
     relatedArticles = relatedData.map((item: any, index: number) => ({
@@ -66,16 +62,18 @@ export default async function Home() {
       publishedAt: item.published_at,
     }));
 
-    // ✅ TRENDING ARTICLES
     const trendingData = Array.isArray(trendingRes) ? trendingRes : [];
 
-    trending = trendingData.map((item: any, index: number) => ({
-      id: item.domain_slug || index,
-      title: item.title,
-      description: item.description,
-      image: "/fallback.jpg",
-      slug: item.domain_slug || index.toString(),
-    }));
+    trending = trendingData
+      .filter((item: any) => item.slug)
+      .map((item: any) => ({
+        id: item.slug,
+        title: item.title,
+        description: item.description,
+        image: item.image?.url || "/fallback.jpg",
+        slug: item.slug,
+        domain_slug: item.domain_slug,
+      }));
 
   } catch (error) {
     console.error("❌ API ERROR:", error);

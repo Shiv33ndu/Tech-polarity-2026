@@ -6,97 +6,86 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ARTICLES } from '@/lib/data';
 import { usePathname } from 'next/navigation';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://tech-polarity-backend.onrender.com";
+
+type Category = {
+  name: string;
+  slug: string;
+  order: number;
+  is_active: boolean;
+};
 
 const LogoText = ({ className = "" }: { className?: string }) => (
   <img
     src="/logo_main.png"
-    alt="TechPolarit Logo"
+    alt="TechPolarity Logo"
     className={`h-9 w-auto object-contain ${className}`}
     draggable={false}
   />
 );
 
-export default LogoText;
-
-const navItems = [
-  'AI','Gaming','Mobile','Software','Hardware','Science','Startups',
-  'Apple','Google','Microsoft','Meta','Amazon','Cybersecurity',
-  'Programming','Gadgets','Reviews','Virtual Reality','Augmented Reality'
-];
-
 export function Header({ activeCategory }: { activeCategory?: string }) {
   const pathname = usePathname();
-  const [activeItem, setActiveItem] = useState(getActiveItem());
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeItem, setActiveItem] = useState<string | undefined>(activeCategory);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  function getActiveItem() {
-    if (activeCategory) return activeCategory;
-    const path = pathname.split('/')[1];
-    const slug = pathname.split('/article/')[1];
-    if (path === 'article' && slug) {
-      const article = ARTICLES.find(a => a.slug === slug);
-      if (article) {
-        return navItems.find(item =>
-          article.category.toLowerCase().includes(item.toLowerCase())
-        );
-      }
-    }
-    return navItems.find(item => item.toLowerCase() === path);
-  }
-
   useEffect(() => {
-    setActiveItem(getActiveItem());
-  }, [activeCategory, pathname]);
-
-  const [randomArticleSlugs, setRandomArticleSlugs] = useState<Record<string,string>>({});
-
-  useEffect(() => {
-    if (!ARTICLES.length) return;
-    const slugs: Record<string,string> = {};
-    navItems.forEach(item => {
-      const list = ARTICLES.filter(a => a.category.includes(item));
-      const random = list.length
-        ? list[Math.floor(Math.random() * list.length)]
-        : ARTICLES[Math.floor(Math.random() * ARTICLES.length)];
-      slugs[item] = random.slug;
-    });
-    setRandomArticleSlugs(slugs);
+    fetch(`${BASE_URL}/api/v1/navigation/main`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setCategories(data);
+      })
+      .catch(() => {});
   }, []);
 
-  const handleScroll = (dir:'left'|'right') => {
+  useEffect(() => {
+    if (activeCategory) {
+      setActiveItem(activeCategory);
+      return;
+    }
+    const pathParts = pathname.split('/');
+    if (pathParts[1] === 'category' && pathParts[2]) {
+      setActiveItem(pathParts[2]);
+    }
+  }, [activeCategory, pathname]);
+
+  const handleScroll = (dir: 'left' | 'right') => {
     scrollContainerRef.current?.scrollBy({
       left: dir === 'left' ? -200 : 200,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   };
 
   const NavLinks = ({ inSheet }: { inSheet?: boolean }) => (
     <div
-      ref={scrollContainerRef}
+      ref={inSheet ? undefined : scrollContainerRef}
       className={cn(
         'flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar',
         inSheet && 'flex-col space-y-4 mt-8'
       )}
     >
-      {navItems.map(item => (
+      {categories.map((cat) => (
         <Button
           asChild
-          key={item}
+          key={cat.slug}
           variant="ghost"
           className={cn(
             'rounded-full font-bold shrink-0',
-            activeItem === item
+            activeItem === cat.slug
               ? 'bg-[#EC1B25] text-white'
               : 'text-muted-foreground hover:text-[#EC1B25]'
           )}
+          onClick={() => setActiveItem(cat.slug)}
         >
-          <Link href={randomArticleSlugs[item] ? `/article/${randomArticleSlugs[item]}` : '#'}>
-            {item}
-          </Link>
+          <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
         </Button>
       ))}
     </div>
@@ -107,7 +96,7 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-20">
 
-          {/* LEFT (fixed width) */}
+          {/* LEFT */}
           <div className="w-[220px] flex items-center">
             <Link href="/" className="flex items-center">
               <LogoText />
@@ -120,24 +109,24 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
               <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-
               <div className="flex-1 overflow-hidden">
                 <NavLinks />
               </div>
-
               <Button variant="ghost" size="icon" onClick={() => handleScroll('right')}>
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
-          {/* RIGHT (fixed width → alignment fix) */}
+          {/* RIGHT */}
           <div className="hidden md:flex w-[220px] justify-end">
             <div className="relative">
               <Input
                 type="search"
                 placeholder="Search"
                 className="pl-10 pr-4 w-56 bg-secondary rounded-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
             </div>
@@ -175,7 +164,6 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
               </SheetContent>
             </Sheet>
           </div>
-
         </div>
       </div>
     </header>
