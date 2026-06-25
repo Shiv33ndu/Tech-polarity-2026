@@ -206,3 +206,58 @@ export async function getTechBarometer() {
     return null;
   }
 }
+
+// ================= NAVIGATION CATEGORIES =================
+export async function getCategories() {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/navigation/main`,
+      { next: { revalidate: 300 } }
+    );
+
+    if (!res.ok) return [];
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Categories fetch error:", error);
+    return [];
+  }
+}
+
+// ================= ARTICLES BY CATEGORY =================
+export async function getArticlesByCategory(
+  domainSlug: string,
+  page: number = 1,
+  limit: number = 12
+) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/category/${domainSlug}?page=${page}&limit=${limit}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return { items: [], total: 0, page, limit };
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Articles by category fetch error:", error);
+    return { items: [], total: 0, page, limit };
+  }
+}
+
+// ================= GLOBAL TRENDING =================
+export async function getGlobalTrending(limit: number = 8) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/home/trending-global?limit=${limit}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return [];
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Global trending fetch error:", error);
+    return [];
+  }
+}
