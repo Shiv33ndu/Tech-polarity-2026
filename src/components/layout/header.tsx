@@ -13,7 +13,7 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://tech-polarity-backend.onrender.com";
 
-type Category = {
+type Section = {
   name: string;
   slug: string;
   order: number;
@@ -29,33 +29,33 @@ const LogoText = ({ className = "" }: { className?: string }) => (
   />
 );
 
-export function Header({ activeCategory }: { activeCategory?: string }) {
+export function Header({ activeSection }: { activeSection?: string }) {
   const pathname = usePathname();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [activeItem, setActiveItem] = useState<string | undefined>(activeCategory);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [activeItem, setActiveItem] = useState<string | undefined>(activeSection);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/v1/navigation/main`)
+    fetch(`${BASE_URL}/api/v1/sections/main`)
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data)) setCategories(data);
+        if (Array.isArray(data)) setSections(data);
       })
       .catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (activeCategory) {
-      setActiveItem(activeCategory);
+    if (activeSection) {
+      setActiveItem(activeSection);
       return;
     }
     const pathParts = pathname.split('/');
-    if (pathParts[1] === 'category' && pathParts[2]) {
+    if (pathParts[1] === 'section' && pathParts[2]) {
       setActiveItem(pathParts[2]);
     }
-  }, [activeCategory, pathname]);
+  }, [activeSection, pathname]);
 
   const handleScroll = (dir: 'left' | 'right') => {
     scrollContainerRef.current?.scrollBy({
@@ -72,20 +72,20 @@ export function Header({ activeCategory }: { activeCategory?: string }) {
         inSheet && 'flex-col space-y-4 mt-8'
       )}
     >
-      {categories.map((cat) => (
+      {sections.map((section) => (
         <Button
           asChild
-          key={cat.slug}
+          key={section.slug}
           variant="ghost"
           className={cn(
             'rounded-full font-bold shrink-0',
-            activeItem === cat.slug
+            activeItem === section.slug
               ? 'bg-[#EC1B25] text-white'
               : 'text-muted-foreground hover:text-[#EC1B25]'
           )}
-          onClick={() => setActiveItem(cat.slug)}
+          onClick={() => setActiveItem(section.slug)}
         >
-          <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
+          <Link href={`/section/${section.slug}`}>{section.name}</Link>
         </Button>
       ))}
     </div>
