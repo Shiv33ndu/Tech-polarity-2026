@@ -245,6 +245,44 @@ export async function getArticlesByCategory(
   }
 }
 
+// ================= SECTIONS (TOP HEADER) =================
+export async function getSections() {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/sections/main`,
+      { next: { revalidate: 300 } }
+    );
+
+    if (!res.ok) return [];
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Sections fetch error:", error);
+    return [];
+  }
+}
+
+// ================= ARTICLES BY SECTION =================
+export async function getArticlesBySection(
+  sectionSlug: string,
+  page: number = 1,
+  limit: number = 12
+) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/section/${sectionSlug}?page=${page}&limit=${limit}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return { items: [], total: 0, page, limit };
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Articles by section fetch error:", error);
+    return { items: [], total: 0, page, limit };
+  }
+}
+
 // ================= GLOBAL TRENDING =================
 export async function getGlobalTrending(limit: number = 8) {
   try {

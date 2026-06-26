@@ -86,7 +86,7 @@ export default async function ArticlePage({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header activeCategory={article.category} />
+      <Header />
 
       <main className="flex-grow py-4 sm:py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
