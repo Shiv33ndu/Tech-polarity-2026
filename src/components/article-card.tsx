@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { MiniAudioButton } from '@/components/mini-audio-button';
 
 interface Article {
   id: string | number;
@@ -74,6 +75,11 @@ export function ArticleCard({
                   {formattedDate}
                 </p>
               )}
+
+              <MiniAudioButton
+                id={article.id}
+                text={`${article.title}. ${article.description}`}
+              />
             </CardContent>
           </div>
         </Card>
@@ -120,6 +126,11 @@ export function ArticleCard({
               {formattedDate}
             </p>
           )}
+
+          <MiniAudioButton
+            id={article.id}
+            text={`${article.title}. ${article.description}`}
+          />
         </CardContent>
       </Card>
     </Link>

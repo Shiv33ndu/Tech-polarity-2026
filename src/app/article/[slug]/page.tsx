@@ -15,6 +15,7 @@ import {
   getArticleTrending,
   getArticleRelated,
 } from '@/lib/api';
+import { ArticleAudioPlayer } from '@/components/article-audio-player';
 
 export default async function ArticlePage({
   params,
@@ -102,7 +103,7 @@ export default async function ArticlePage({
               <article>
 
                 <header className="mb-8 text-center">
-                  <Badge className="mb-4 border-[#EC1B25] text-black px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl capitalize">
+                  <Badge className="mb-4 border-[#EC1B25] text-white px-6 py-2 text-base sm:px-10 sm:py-3 sm:text-xl capitalize">
                     {article.category}
                   </Badge>
 
@@ -114,6 +115,12 @@ export default async function ArticlePage({
                     Published on {formattedDate}
                   </p>
                 </header>
+
+                <div className="mb-8">
+                  <ArticleAudioPlayer
+                    text={`${article.title}. ${article.description}. ${article.content}`}
+                  />
+                </div>
 
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">
                   <Image

@@ -22,8 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { submitContact } from '@/lib/api'; // ✅ IMPORT ADDED
+import { submitContact } from '@/lib/api';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -40,11 +39,6 @@ const formSchema = z.object({
 export default function ContactPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false); // ✅ LOADING STATE
-
-  const image = PlaceHolderImages.find((img) => img.id === 'contact_hero');
-  const imageUrl =
-    image?.imageUrl || 'https://picsum.photos/seed/contact/1200/600';
-  const imageHint = image?.imageHint || 'contact abstract';
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -110,18 +104,12 @@ export default function ContactPage() {
 
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-12">
                 <Image
-                  src={imageUrl}
+                  src="/Contact us.png"
                   alt="Contact Us"
                   fill
                   sizes="100vw"
                   className="object-cover"
                 />
-              </div>
-
-              <div className="text-center -mt-8 mb-12">
-                <span className="inline-block bg-secondary text-secondary-foreground/80 text-xs px-3 py-1 rounded-full">
-                  Image Credit: Unsplash
-                </span>
               </div>
 
               <Form {...form}>

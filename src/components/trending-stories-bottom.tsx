@@ -29,15 +29,24 @@ export function TrendingStoriesBottom() {
   useEffect(() => {
     fetch(`${BASE_URL}/api/v1/home/trending-global?limit=10`)
       .then((r) => r.json())
-      .then((data) => {
+      .then(async (data) => {
         if (!Array.isArray(data)) return;
+
+        const detailed = await Promise.all(
+          data.map((item: any) =>
+            fetch(`${BASE_URL}/api/v1/articles/${item.slug}`)
+              .then((r) => r.ok ? r.json() : null)
+              .catch(() => null)
+          )
+        );
+
         const mapped: Article[] = data.map((item: any, i: number) => ({
           id: item.slug || i,
           title: item.title,
           description: item.description || "",
-          image: item.image?.url || "/fallback.jpg",
+          image: detailed[i]?.image?.url || "/fallback.jpg",
           slug: item.slug,
-          publishedAt: item.published_at,
+          publishedAt: detailed[i]?.published_at || item.published_at,
         }));
         setArticles(mapped);
       })

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,7 @@ export function Header({ activeSection }: { activeSection?: string }) {
   const [searchQuery, setSearchQuery] = useState('');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+
   useEffect(() => {
     fetch(`${BASE_URL}/api/v1/sections/main`)
       .then((r) => r.json())
@@ -56,13 +57,6 @@ export function Header({ activeSection }: { activeSection?: string }) {
       setActiveItem(pathParts[2]);
     }
   }, [activeSection, pathname]);
-
-  const handleScroll = (dir: 'left' | 'right') => {
-    scrollContainerRef.current?.scrollBy({
-      left: dir === 'left' ? -200 : 200,
-      behavior: 'smooth',
-    });
-  };
 
   const NavLinks = ({ inSheet }: { inSheet?: boolean }) => (
     <div
@@ -103,32 +97,18 @@ export function Header({ activeSection }: { activeSection?: string }) {
             </Link>
           </div>
 
-          {/* CENTER */}
-          <div className="hidden md:flex flex-1 justify-center px-6">
-            <div className="flex items-center max-w-5xl w-full">
-              <Button variant="ghost" size="icon" onClick={() => handleScroll('left')}>
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <div className="flex-1 overflow-hidden">
-                <NavLinks />
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => handleScroll('right')}>
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="hidden md:flex w-[220px] justify-end">
-            <div className="relative">
+          {/* RIGHT — nav + search grouped together */}
+          <div className="hidden md:flex ml-auto items-center gap-3">
+            <NavLinks />
+            <div className="relative shrink-0">
               <Input
                 type="search"
                 placeholder="Search"
-                className="pl-10 pr-4 w-56 bg-secondary rounded-full"
+                className="pl-10 pr-4 w-48 bg-secondary rounded-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
             </div>
           </div>
 

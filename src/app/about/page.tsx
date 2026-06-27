@@ -3,14 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
 export default function AboutPage() {
-  const image = PlaceHolderImages.find((img) => img.id === 'demo_article_hero');
-  const imageUrl = image?.imageUrl || 'https://picsum.photos/seed/about/1200/600';
-  const imageHint = image?.imageHint || 'tech abstract';
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -36,17 +32,11 @@ export default function AboutPage() {
 
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">
                   <Image
-                    src={imageUrl}
+                    src="/About Techpolarity.png"
                     alt="About TechPolarity"
                     fill
                     className="object-cover"
-                    data-ai-hint={imageHint}
                   />
-                </div>
-                <div className="text-center -mt-4 mb-8">
-                  <span className="inline-block bg-secondary text-secondary-foreground/80 text-xs px-3 py-1 rounded-full">
-                    Image Credit: Unsplash
-                  </span>
                 </div>
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90">
@@ -54,7 +44,7 @@ export default function AboutPage() {
                     Tech Polarity exists to decode technology and to make it usable for all. Be it a casual reader, techie, or budding professional, Tech Polarity was founded to keep you informed, inspired, and always ahead.
                   </p>
                   <p>
-                    Since 2025, our blog has existed with the sole purpose of breaking down the fast-paced world of technology. From smartphone reviews to discussions of AI, gaming, and futuristic gadgets — you name it — we keep it entertaining yet precise enough.
+                    Since 2026, our blog has existed with the sole purpose of breaking down the fast-paced world of technology. From smartphone reviews to discussions of AI, gaming, and futuristic gadgets — you name it — we keep it entertaining yet precise enough.
                   </p>
                   <h3 className="font-headline font-bold text-2xl sm:text-3xl !mt-12 !mb-4 text-foreground">What makes us different?</h3>
                   <ul>
