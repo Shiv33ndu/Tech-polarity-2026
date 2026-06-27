@@ -28,7 +28,7 @@ export function TrendingStories({ data = [] }: TrendingStoriesProps) {
             <li key={article.slug}>
               <Link href={`/article/${article.slug}`} className="group block">
                 <div className="space-y-2">
-                  <Badge variant="secondary" className="text-xs rounded-full bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">
+                  <Badge variant="secondary" className="text-xs rounded-full bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30 capitalize">
                     {article.domain_slug}
                   </Badge>
                   <h4 className="font-semibold group-hover:underline leading-snug">
