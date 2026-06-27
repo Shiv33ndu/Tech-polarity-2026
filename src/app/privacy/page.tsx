@@ -3,14 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const image = PlaceHolderImages.find((img) => img.id === 'demo_article_hero');
-  const imageUrl = image?.imageUrl || 'https://picsum.photos/seed/privacy/1200/600';
-  const imageHint = image?.imageHint || 'security abstract';
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -36,17 +32,11 @@ export default function PrivacyPage() {
 
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">
                   <Image
-                    src={imageUrl}
+                    src="/Privacy.png"
                     alt="Privacy Policy"
                     fill
                     className="object-cover"
-                    data-ai-hint={imageHint}
                   />
-                </div>
-                 <div className="text-center -mt-4 mb-8">
-                  <span className="inline-block bg-secondary text-secondary-foreground/80 text-xs px-3 py-1 rounded-full">
-                    Image Credit: Unsplash
-                  </span>
                 </div>
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90">
