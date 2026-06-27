@@ -15,6 +15,7 @@ import {
   getArticleTrending,
   getArticleRelated,
 } from '@/lib/api';
+import { ArticleAudioPlayer } from '@/components/article-audio-player';
 
 export default async function ArticlePage({
   params,
@@ -114,6 +115,12 @@ export default async function ArticlePage({
                     Published on {formattedDate}
                   </p>
                 </header>
+
+                <div className="mb-8">
+                  <ArticleAudioPlayer
+                    text={`${article.title}. ${article.description}. ${article.content}`}
+                  />
+                </div>
 
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">
                   <Image
