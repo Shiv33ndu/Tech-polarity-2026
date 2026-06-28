@@ -42,6 +42,7 @@ export default async function ArticlePage({
       description: articleRes.description,
       summary: articleRes.summary || '',
       image: articleRes.image?.url || '/fallback.jpg',
+      imageCredit: articleRes.image?.credit || '',
       slug: articleRes.slug,
       category: articleRes.domain_slug || 'Tech',
       publishedAt: articleRes.published_at,
@@ -58,6 +59,7 @@ export default async function ArticlePage({
       title: item.title,
       description: item.description || '',
       image: item.image?.url || '/fallback.jpg',
+      imageCredit: item.image?.credit || '',
       slug: item.slug,
       publishedAt: item.published_at,
     }));
@@ -146,6 +148,11 @@ export default async function ArticlePage({
                     sizes="100vw"
                     className="object-cover"
                   />
+                  {article.imageCredit && (
+                    <span className="absolute bottom-2 right-3 text-[10px] text-white/80 bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm pointer-events-none leading-none">
+                      © {article.imageCredit}
+                    </span>
+                  )}
                 </div>
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90 mt-8">

@@ -18,6 +18,7 @@ type Article = {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   domain_slug?: string;
   publishedAt?: string;
@@ -39,6 +40,7 @@ export default async function Home() {
         title: main.title,
         description: main.description,
         image: main.image?.url || "/fallback.jpg",
+        imageCredit: main.image?.credit || '',
         slug: main.slug,
         publishedAt: main.published_at,
       };
@@ -58,6 +60,7 @@ export default async function Home() {
       title: item.title,
       description: item.description,
       image: item.image?.url || "/fallback.jpg",
+      imageCredit: item.image?.credit || '',
       slug: item.slug,
       publishedAt: item.published_at,
     }));
@@ -71,6 +74,7 @@ export default async function Home() {
         title: item.title,
         description: item.description,
         image: item.image?.url || "/fallback.jpg",
+        imageCredit: item.image?.credit || '',
         slug: item.slug,
         domain_slug: item.domain_slug,
       }));
