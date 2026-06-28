@@ -38,10 +38,12 @@ const PLAY_EVENT = "mini-audio-play";
 
 export function MiniAudioButton({ id, text }: MiniAudioButtonProps) {
   const [playing, setPlaying] = useState(false);
+  const [supported, setSupported] = useState(false);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
     if (!("speechSynthesis" in window)) return;
+    setSupported(true);
 
     function loadVoices() {
       const v = window.speechSynthesis.getVoices();
@@ -91,7 +93,7 @@ export function MiniAudioButton({ id, text }: MiniAudioButtonProps) {
     setPlaying(true);
   }
 
-  if (!("speechSynthesis" in (typeof window !== "undefined" ? window : {}))) return null;
+  if (!supported) return null;
 
   return (
     <button

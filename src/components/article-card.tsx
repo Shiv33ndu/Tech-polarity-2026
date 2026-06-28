@@ -39,7 +39,11 @@ export function ArticleCard({
     'overflow-hidden h-full transition-all duration-300 ease-in-out hover:shadow-xl rounded-2xl';
 
   const formattedDate = article.publishedAt
-    ? new Date(article.publishedAt).toLocaleDateString()
+    ? new Date(article.publishedAt).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     : null;
 
   // =========================

@@ -40,6 +40,7 @@ export default async function ArticlePage({
       id: articleRes.slug,
       title: articleRes.title,
       description: articleRes.description,
+      summary: articleRes.summary || '',
       image: articleRes.image?.url || '/fallback.jpg',
       slug: articleRes.slug,
       category: articleRes.domain_slug || 'Tech',
@@ -149,6 +150,14 @@ export default async function ArticlePage({
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90 mt-8">
                   <p className="text-xl font-medium leading-relaxed">{article.description}</p>
+
+                  {article.summary && (
+                    <div className="not-prose my-6 rounded-2xl border-l-4 border-[#EC1B25] bg-muted/50 px-6 py-5">
+                      <p className="text-xs font-bold uppercase tracking-widest text-[#EC1B25] mb-2">TL;DR</p>
+                      <p className="text-base sm:text-lg leading-relaxed text-foreground/80">{article.summary}</p>
+                    </div>
+                  )}
+
                   {sanitizedContent && (
                     <div
                       className="mt-6 leading-relaxed"
