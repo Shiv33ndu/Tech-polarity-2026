@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -45,16 +45,24 @@ export function CategoryNav() {
     <nav className="border bg-secondary/50 rounded-full">
       <div className="container mx-auto px-0">
         <div className="relative flex items-center">
-          {/* Fixed "Trending" label on the left */}
-          <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 pr-3 bg-gradient-to-r from-secondary/80 via-secondary/60 to-transparent rounded-l-full z-10 pointer-events-none">
-            <span className="text-sm font-bold text-[#EC1B25] shrink-0 pr-1">
+          {/* Left: arrow button + fixed "Trending" label */}
+          <div className="absolute left-0 top-0 bottom-0 flex items-center gap-2 pl-2 pr-4 bg-gradient-to-r from-secondary/80 via-secondary/60 to-transparent rounded-l-full z-10">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-full shadow-md shrink-0"
+              onClick={() => handleScroll('left')}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <span className="text-sm font-bold text-[#EC1B25] shrink-0">
               Trending
             </span>
           </div>
 
           <div
             ref={scrollContainerRef}
-            className="flex items-center space-x-1 sm:space-x-2 py-2 overflow-x-auto whitespace-nowrap no-scrollbar pl-24 pr-12"
+            className="flex items-center space-x-1 sm:space-x-2 py-2 overflow-x-auto whitespace-nowrap no-scrollbar pl-36 pr-12"
           >
             {categories.map((cat, index) => (
               <Button
