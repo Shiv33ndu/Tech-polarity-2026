@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Tag } from 'lucide-react';
+import sanitizeHtml from 'sanitize-html';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -85,6 +86,20 @@ export default async function ArticlePage({
       })
     : '';
 
+  const sanitizedContent = article.content
+    ? sanitizeHtml(article.content, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h2', 'h3']),
+        allowedAttributes: {
+          ...sanitizeHtml.defaults.allowedAttributes,
+          img: ['src', 'alt'],
+        },
+      })
+    : '';
+
+  const plainTextContent = article.content
+    ? article.content.replace(/<[^>]*>/g, ' ').replace(/\s{2,}/g, ' ').trim()
+    : '';
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -118,7 +133,7 @@ export default async function ArticlePage({
 
                 <div className="mb-8">
                   <ArticleAudioPlayer
-                    text={`${article.title}. ${article.description}. ${article.content}`}
+                    text={`${article.title}. ${article.description}. ${plainTextContent}`}
                   />
                 </div>
 
@@ -134,10 +149,11 @@ export default async function ArticlePage({
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90 mt-8">
                   <p className="text-xl font-medium leading-relaxed">{article.description}</p>
-                  {article.content && (
-                    <div className="mt-6 whitespace-pre-wrap leading-relaxed">
-                      {article.content}
-                    </div>
+                  {sanitizedContent && (
+                    <div
+                      className="mt-6 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                    />
                   )}
                 </div>
 
