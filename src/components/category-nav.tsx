@@ -45,8 +45,11 @@ export function CategoryNav() {
     <nav className="border bg-secondary/50 rounded-full">
       <div className="container mx-auto px-0">
         <div className="relative flex items-center">
-          {/* Left: arrow button + fixed "Trending" label */}
-          <div className="absolute left-0 top-0 bottom-0 flex items-center gap-2 pl-2 pr-4 bg-gradient-to-r from-secondary/80 via-secondary/60 to-transparent rounded-l-full z-10">
+          {/* Left: "Trending" label then ← arrow */}
+          <div className="absolute left-0 top-0 bottom-0 flex items-center gap-2 pl-4 pr-4 bg-gradient-to-r from-secondary/90 via-secondary/70 to-transparent rounded-l-full z-10">
+            <span className="text-sm font-bold text-[#EC1B25] shrink-0">
+              Trending
+            </span>
             <Button
               variant="outline"
               size="icon"
@@ -55,9 +58,6 @@ export function CategoryNav() {
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
-            <span className="text-sm font-bold text-[#EC1B25] shrink-0">
-              Trending
-            </span>
           </div>
 
           <div
