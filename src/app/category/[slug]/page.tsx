@@ -12,6 +12,7 @@ type Article = {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   publishedAt?: string;
 };
@@ -39,6 +40,7 @@ export default async function CategoryPage({
     title: item.title,
     description: item.description || '',
     image: item.image?.url || '/fallback.jpg',
+    imageCredit: item.image?.credit || '',
     slug: item.slug,
     publishedAt: item.published_at,
   }));

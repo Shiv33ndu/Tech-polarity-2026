@@ -78,6 +78,11 @@ export default async function SearchPage({
                         alt={article.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
+                      {article.image?.credit && (
+                        <span className="absolute bottom-1.5 right-2 text-[9px] text-white/80 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm pointer-events-none leading-none">
+                          © {article.image.credit}
+                        </span>
+                      )}
                     </div>
                   )}
                   <div className="p-4">
