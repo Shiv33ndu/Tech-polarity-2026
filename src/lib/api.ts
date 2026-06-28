@@ -283,6 +283,30 @@ export async function getArticlesBySection(
   }
 }
 
+// ================= SEARCH ARTICLES =================
+export async function searchArticles(
+  query: string,
+  page: number = 1,
+  limit: number = 12
+) {
+  try {
+    const params = new URLSearchParams({
+      q: query,
+      page: String(page),
+      limit: String(limit),
+    });
+    const res = await fetch(
+      `${BASE_URL}/api/v1/articles/search?${params}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return { items: [], total: 0, page, limit };
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Search error:", error);
+    return { items: [], total: 0, page, limit };
+  }
+}
+
 // ================= GLOBAL TRENDING =================
 export async function getGlobalTrending(limit: number = 8) {
   try {
