@@ -88,8 +88,8 @@ export default async function Home() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <p className="text-center text-muted-foreground text-sm font-medium tracking-widest uppercase mb-4">
-          Tech that matters
+        <p className="text-center text-muted-foreground text-sm font-bold tracking-widest uppercase mb-4">
+          Tech Made Simple
         </p>
 
         <CategoryNav />
