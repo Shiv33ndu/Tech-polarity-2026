@@ -92,7 +92,7 @@ export default async function Home() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mb-6 text-[#EC1B25] leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 text-[#EC1B25] leading-tight">
           Tech Made Simple
         </h1>
 
