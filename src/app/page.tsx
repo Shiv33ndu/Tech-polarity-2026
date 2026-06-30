@@ -91,8 +91,8 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 text-[#EC1B25] leading-tight">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-16 text-[#EC1B25] leading-tight">
           Tech Made Simple
         </h1>
 
