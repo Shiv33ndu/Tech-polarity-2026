@@ -35,7 +35,7 @@ const LogoText = ({ className = "" }: { className?: string }) => (
   <img
     src="/logo_main.png"
     alt="TechPolarity Logo"
-    className={`h-9 w-auto object-contain ${className}`}
+    className={`h-6 sm:h-7 w-auto object-contain ${className}`}
     draggable={false}
   />
 );

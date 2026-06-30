@@ -44,9 +44,9 @@ export function CategoryNav() {
   return (
     <nav className="border bg-secondary/50 rounded-full">
       <div className="container mx-auto px-0">
-        <div className="relative flex items-center">
-          {/* Left: "Trending" label then ← arrow */}
-          <div className="absolute left-0 top-0 bottom-0 flex items-center gap-2 pl-4 pr-4 bg-gradient-to-r from-secondary/90 via-secondary/70 to-transparent rounded-l-full z-10">
+        <div className="flex items-center">
+          {/* Left: "Trending" label + left arrow — in flow, never overlaps */}
+          <div className="flex items-center gap-2 pl-4 pr-2 shrink-0">
             <span className="text-sm font-bold text-[#EC1B25] shrink-0">
               Trending
             </span>
@@ -60,11 +60,12 @@ export function CategoryNav() {
             </Button>
           </div>
 
+          {/* Scrollable categories — takes remaining space, clips at edges */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center space-x-1 sm:space-x-2 py-2 overflow-x-auto whitespace-nowrap no-scrollbar pl-36 pr-12"
+            className="flex items-center space-x-1 sm:space-x-2 py-2 overflow-x-auto whitespace-nowrap no-scrollbar flex-1 min-w-0"
           >
-            {categories.map((cat, index) => (
+            {categories.map((cat) => (
               <Button
                 asChild
                 variant="ghost"
@@ -73,8 +74,7 @@ export function CategoryNav() {
                   "rounded-full px-4 text-sm font-semibold shrink-0 transition-colors",
                   activeSlug === cat.slug
                     ? "bg-black text-white hover:bg-black hover:text-white"
-                    : "text-black hover:text-[#EC1B25] hover:bg-white",
-                  index === categories.length - 1 && "mr-4"
+                    : "text-black hover:text-[#EC1B25] hover:bg-white"
                 )}
                 onClick={() => setActiveSlug(cat.slug)}
               >
@@ -83,11 +83,12 @@ export function CategoryNav() {
             ))}
           </div>
 
-          <div className="absolute right-0 top-0 bottom-0 flex items-center bg-gradient-to-l from-secondary/50 to-transparent pl-4 rounded-r-full">
+          {/* Right arrow — in flow, always visible */}
+          <div className="flex items-center pl-2 pr-2 shrink-0">
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-full shadow-md mr-2"
+              className="h-8 w-8 rounded-full shadow-md"
               onClick={() => handleScroll('right')}
             >
               <ChevronRight className="h-5 w-5" />

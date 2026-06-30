@@ -12,6 +12,7 @@ interface Article {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   publishedAt?: string;
 }
@@ -39,7 +40,11 @@ export function ArticleCard({
     'overflow-hidden h-full transition-all duration-300 ease-in-out hover:shadow-xl rounded-2xl';
 
   const formattedDate = article.publishedAt
-    ? new Date(article.publishedAt).toLocaleDateString()
+    ? new Date(article.publishedAt).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     : null;
 
   // =========================
@@ -59,6 +64,11 @@ export function ArticleCard({
                 className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-md"
                 onError={() => setImgSrc('/fallback.jpg')}
               />
+              {article.imageCredit && (
+                <span className="absolute bottom-1.5 right-2 text-[9px] text-white/80 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm pointer-events-none leading-none">
+                  © {article.imageCredit}
+                </span>
+              )}
             </div>
 
             <CardContent className="p-0 flex-1">
@@ -104,6 +114,11 @@ export function ArticleCard({
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             onError={() => setImgSrc('/fallback.jpg')}
           />
+          {article.imageCredit && (
+            <span className="absolute bottom-1.5 right-2 text-[9px] text-white/80 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm pointer-events-none leading-none">
+              © {article.imageCredit}
+            </span>
+          )}
         </div>
 
         <CardContent className={`p-4 ${isLarge ? 'md:p-6' : ''}`}>

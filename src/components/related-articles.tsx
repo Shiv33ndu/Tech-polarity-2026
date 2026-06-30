@@ -15,6 +15,7 @@ type Article = {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   publishedAt?: string;
 };

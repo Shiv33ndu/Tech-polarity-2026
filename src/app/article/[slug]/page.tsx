@@ -40,7 +40,9 @@ export default async function ArticlePage({
       id: articleRes.slug,
       title: articleRes.title,
       description: articleRes.description,
+      summary: articleRes.summary || '',
       image: articleRes.image?.url || '/fallback.jpg',
+      imageCredit: articleRes.image?.credit || '',
       slug: articleRes.slug,
       category: articleRes.domain_slug || 'Tech',
       publishedAt: articleRes.published_at,
@@ -57,6 +59,7 @@ export default async function ArticlePage({
       title: item.title,
       description: item.description || '',
       image: item.image?.url || '/fallback.jpg',
+      imageCredit: item.image?.credit || '',
       slug: item.slug,
       publishedAt: item.published_at,
     }));
@@ -145,10 +148,23 @@ export default async function ArticlePage({
                     sizes="100vw"
                     className="object-cover"
                   />
+                  {article.imageCredit && (
+                    <span className="absolute bottom-2 right-3 text-[10px] text-white/80 bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm pointer-events-none leading-none">
+                      © {article.imageCredit}
+                    </span>
+                  )}
                 </div>
 
                 <div className="prose prose-base sm:prose-lg max-w-none mx-auto text-foreground/90 mt-8">
                   <p className="text-xl font-medium leading-relaxed">{article.description}</p>
+
+                  {article.summary && (
+                    <div className="not-prose my-6 rounded-2xl border-l-4 border-[#EC1B25] bg-muted/50 px-6 py-5">
+                      <p className="text-xs font-bold uppercase tracking-widest text-[#EC1B25] mb-2">Summary</p>
+                      <p className="text-base sm:text-lg leading-relaxed text-foreground/80">{article.summary}</p>
+                    </div>
+                  )}
+
                   {sanitizedContent && (
                     <div
                       className="mt-6 leading-relaxed"
