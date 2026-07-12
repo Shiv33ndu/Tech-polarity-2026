@@ -29,12 +29,12 @@ export async function getMainArticle() {
 }
 
 // ================= RELATED ARTICLES =================
-export async function getRelatedArticles(slug?: string) {
+export async function getRelatedArticles(slug?: string, limit: number = 8) {
   try {
     if (!slug) return [];
 
     const res = await fetch(
-      `${BASE_URL}/api/v1/home/related-articles?exclude_slug=${slug}&limit=8`,
+      `${BASE_URL}/api/v1/home/related-articles?exclude_slug=${slug}&limit=${limit}`,
       {
         cache: "no-store",
       }

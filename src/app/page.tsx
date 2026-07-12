@@ -3,8 +3,10 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategoryNav } from '@/components/category-nav';
 import { ArticleCard } from '@/components/article-card';
+import { HomeArticlesFeed } from '@/components/home-articles-feed';
 import { TrendingStories } from '@/components/trending-stories';
 import { TrendingStoriesBottom } from '@/components/trending-stories-bottom';
+import { MoreArticlesFeed } from '@/components/more-articles-feed';
 import { Separator } from '@/components/ui/separator';
 import { BarometerSidebar } from '@/components/barometer-sidebar';
 
@@ -66,10 +68,6 @@ export default async function Home() {
     console.error("❌ API ERROR:", error);
   }
 
-  // ✅ UI slicing
-  const otherArticles = relatedArticles.slice(0, 4);
-  const nextArticles = relatedArticles.slice(4, 6);
-
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
@@ -102,28 +100,15 @@ export default async function Home() {
               </p>
             )}
 
-            {/* ✅ RELATED GRID */}
-            {otherArticles.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
-                {otherArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
-                ))}
-              </div>
-            )}
-
-            <Separator className="my-8" />
-
-            {/* ✅ HORIZONTAL LIST */}
-            {nextArticles.length > 0 && (
-              <div className="space-y-8">
-                {nextArticles.map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    layout="horizontal"
-                  />
-                ))}
-              </div>
+            {/* ✅ ALL ARTICLES + LOAD MORE */}
+            {relatedArticles.length > 0 && (
+              <>
+                <Separator className="my-8" />
+                <HomeArticlesFeed
+                  initialArticles={relatedArticles}
+                  mainSlug={mainArticle?.slug}
+                />
+              </>
             )}
           </div>
 
@@ -138,6 +123,8 @@ export default async function Home() {
         </div>
 
         <TrendingStoriesBottom />
+
+        <MoreArticlesFeed />
       </main>
 
       <Footer />
