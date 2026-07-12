@@ -3,7 +3,6 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategoryNav } from '@/components/category-nav';
 import { ArticleCard } from '@/components/article-card';
-import { HomeArticlesFeed } from '@/components/home-articles-feed';
 import { TrendingStories } from '@/components/trending-stories';
 import { TrendingStoriesBottom } from '@/components/trending-stories-bottom';
 import { MoreArticlesFeed } from '@/components/more-articles-feed';
@@ -49,7 +48,7 @@ export default async function Home() {
 
     // ✅ ONLY FETCH RELATED IF MAIN EXISTS
     const relatedRes = main?.slug
-      ? await getRelatedArticles(main.slug)
+      ? await getRelatedArticles(main.slug, 50)
       : [];
 
     const relatedData = Array.isArray(relatedRes) ? relatedRes : [];
@@ -67,6 +66,10 @@ export default async function Home() {
   } catch (error) {
     console.error("❌ API ERROR:", error);
   }
+
+  // ✅ UI slicing
+  const otherArticles = relatedArticles.slice(0, 4);
+  const nextArticles = relatedArticles.slice(4);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -100,14 +103,28 @@ export default async function Home() {
               </p>
             )}
 
-            {/* ✅ ALL ARTICLES + LOAD MORE */}
-            {relatedArticles.length > 0 && (
+            {/* ✅ RELATED GRID */}
+            {otherArticles.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
+                {otherArticles.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+            )}
+
+            {/* ✅ HORIZONTAL LIST */}
+            {nextArticles.length > 0 && (
               <>
                 <Separator className="my-8" />
-                <HomeArticlesFeed
-                  initialArticles={relatedArticles}
-                  mainSlug={mainArticle?.slug}
-                />
+                <div className="space-y-8">
+                  {nextArticles.map((article) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      layout="horizontal"
+                    />
+                  ))}
+                </div>
               </>
             )}
           </div>
