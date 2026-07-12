@@ -36,11 +36,11 @@ export function RelatedArticles({ data = [] }: RelatedArticlesProps) {
           opts={{ align: "start", loop: true }}
           className="w-full"
         >
-          <CarouselContent className="-ml-4">
+          <CarouselContent className="-ml-4 items-stretch">
             {data.map((article) => (
               <CarouselItem key={article.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <ArticleCard article={article} />
+                <div className="p-1 h-full grid">
+                  <ArticleCard article={article} compact />
                 </div>
               </CarouselItem>
             ))}

@@ -105,9 +105,9 @@ export default async function Home() {
 
             {/* ✅ RELATED GRID */}
             {otherArticles.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 items-stretch">
                 {otherArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
+                  <ArticleCard key={article.id} article={article} compact />
                 ))}
               </div>
             )}
@@ -122,6 +122,7 @@ export default async function Home() {
                       key={article.id}
                       article={article}
                       layout="horizontal"
+                      compact
                     />
                   ))}
                 </div>
