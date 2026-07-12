@@ -19,6 +19,7 @@ type Article = {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   domain_slug?: string;
   publishedAt?: string;
@@ -40,6 +41,7 @@ export default async function Home() {
         title: main.title,
         description: main.description,
         image: main.image?.url || "/fallback.jpg",
+        imageCredit: main.image?.credit || '',
         slug: main.slug,
         publishedAt: main.published_at,
       };
@@ -59,6 +61,7 @@ export default async function Home() {
       title: item.title,
       description: item.description,
       image: item.image?.url || "/fallback.jpg",
+      imageCredit: item.image?.credit || '',
       slug: item.slug,
       publishedAt: item.published_at,
     }));
@@ -72,6 +75,7 @@ export default async function Home() {
         title: item.title,
         description: item.description,
         image: item.image?.url || "/fallback.jpg",
+        imageCredit: item.image?.credit || '',
         slug: item.slug,
         domain_slug: item.domain_slug,
       }));
@@ -88,8 +92,8 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="flex-grow container mx-auto px-10 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <div className="relative w-full max-w-2xl mx-auto mb-4 sm:mb-8 aspect-[839/158]">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <div className="relative w-full max-w-2xl mx-auto mb-10 sm:mb-16 aspect-[839/158]">
           <Image
             src="/header.png"
             alt="Tech Polarity"

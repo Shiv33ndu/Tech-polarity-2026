@@ -73,7 +73,7 @@ export function Footer() {
                     </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="rounded-full">
-                    <a href="www.youtube.com/@Techpolarity" aria-label="Youtube">
+                    <a href="https://www.youtube.com/@Techpolarity" aria-label="Youtube">
                         <Youtube className="h-6 w-6" />
                     </a>
                 </Button>

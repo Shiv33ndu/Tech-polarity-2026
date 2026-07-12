@@ -19,6 +19,7 @@ type Article = {
   title: string;
   description: string;
   image: string;
+  imageCredit?: string;
   slug: string;
   publishedAt?: string;
 };
@@ -45,6 +46,7 @@ export function TrendingStoriesBottom() {
           title: item.title,
           description: item.description || "",
           image: detailed[i]?.image?.url || "/fallback.jpg",
+          imageCredit: detailed[i]?.image?.credit || '',
           slug: item.slug,
           publishedAt: detailed[i]?.published_at || item.published_at,
         }));
