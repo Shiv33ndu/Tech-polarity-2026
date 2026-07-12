@@ -64,9 +64,9 @@ export function ArticleCard({
   if (layout === 'horizontal') {
     return (
       <Link href={`/article/${article.slug}`} className="group block h-full">
-        <Card className={cn(cardClasses, 'border p-4', compact && 'shadow-[0_8px_20px_rgba(0,0,0,0.1)]')}>
-          <div className={`flex flex-col sm:flex-row gap-6 ${compact ? 'sm:min-h-[160px]' : ''}`}>
-            <div className="relative aspect-[4/3] w-full sm:w-1/3">
+        <Card className={cn(cardClasses, compact ? 'border p-3' : 'border p-4', compact && 'shadow-[0_8px_20px_rgba(0,0,0,0.1)]')}>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div className={`relative w-full sm:w-1/3 ${compact ? 'aspect-[40/21]' : 'aspect-[4/3]'}`}>
               <Image
                 src={imgSrc}
                 alt={article.title || 'Article Image'}

@@ -110,7 +110,7 @@ export function MoreArticlesFeed() {
       {articles.length > 0 && (
         <div className="space-y-6">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} layout="horizontal" />
+            <ArticleCard key={article.id} article={article} layout="horizontal" compact />
           ))}
         </div>
       )}
