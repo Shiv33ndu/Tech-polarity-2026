@@ -105,7 +105,7 @@ export function MoreArticlesFeed() {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl sm:text-3xl font-bold font-headline mb-6">More Articles</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold font-headline mb-6 text-center text-[#EC1B25]">More Articles</h2>
 
       {articles.length > 0 && (
         <div className="space-y-6">
