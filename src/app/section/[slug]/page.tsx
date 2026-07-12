@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -54,18 +53,10 @@ export default async function SectionPage({
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div className="flex items-center gap-4 mb-8">
-          <Button asChild variant="ghost" className="rounded-full">
-            <Link href="/">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Home
-            </Link>
-          </Button>
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold font-headline capitalize">
               {sectionName}
             </h1>
-            <p className="text-muted-foreground mt-1">
-              {data.total || 0} articles
-            </p>
           </div>
         </div>
 
