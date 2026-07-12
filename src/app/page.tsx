@@ -69,7 +69,7 @@ export default async function Home() {
 
   // ✅ UI slicing
   const otherArticles = relatedArticles.slice(0, 4);
-  const nextArticles = relatedArticles.slice(4);
+  const nextArticles = relatedArticles.slice(4, 14);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
