@@ -108,9 +108,9 @@ export function MoreArticlesFeed() {
       <h2 className="text-2xl sm:text-3xl font-bold font-headline mb-6">More Articles</h2>
 
       {articles.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="space-y-6">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCard key={article.id} article={article} layout="horizontal" />
           ))}
         </div>
       )}
