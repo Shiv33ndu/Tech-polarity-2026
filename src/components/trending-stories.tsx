@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { getCategories, getTrendingArticles } from '@/lib/api';
+import { getSections, getTrendingArticles } from '@/lib/api';
 
 type TrendingItem = {
   slug: string;
@@ -14,10 +14,9 @@ type TrendingItem = {
   description?: string;
 };
 
-type Category = {
+type Section = {
   name: string;
   slug: string;
-  section_slug?: string | null;
   order: number;
   is_active: boolean;
 };
@@ -63,24 +62,24 @@ function TrendingBox({ title, items }: { title: string; items: TrendingItem[] })
 }
 
 export function TrendingStories({ data = [] }: TrendingStoriesProps) {
-  const [categoryBoxes, setCategoryBoxes] = useState<{ category: Category; items: TrendingItem[] }[]>([]);
+  const [sectionBoxes, setSectionBoxes] = useState<{ section: Section; items: TrendingItem[] }[]>([]);
 
   useEffect(() => {
     let cancelled = false;
 
-    getCategories()
-      .then(async (categories: Category[]) => {
-        if (!Array.isArray(categories) || cancelled) return;
+    getSections()
+      .then(async (sections: Section[]) => {
+        if (!Array.isArray(sections) || cancelled) return;
 
         const results = await Promise.all(
-          categories.map(async (category) => ({
-            category,
-            items: await getTrendingArticles(category.slug),
+          sections.map(async (section) => ({
+            section,
+            items: await getTrendingArticles(section.slug),
           }))
         );
 
         if (!cancelled) {
-          setCategoryBoxes(
+          setSectionBoxes(
             results.filter((r) => Array.isArray(r.items) && r.items.length > 0)
           );
         }
@@ -90,14 +89,14 @@ export function TrendingStories({ data = [] }: TrendingStoriesProps) {
     return () => { cancelled = true; };
   }, []);
 
-  if (!data.length && categoryBoxes.length === 0) return null;
+  if (!data.length && sectionBoxes.length === 0) return null;
 
   return (
     <div className="space-y-8">
       <TrendingBox title="Trending Story" items={data} />
 
-      {categoryBoxes.map(({ category, items }) => (
-        <TrendingBox key={category.slug} title={`Trending Stories in ${category.name}`} items={items} />
+      {sectionBoxes.map(({ section, items }) => (
+        <TrendingBox key={section.slug} title={`Trending Stories in ${section.name}`} items={items} />
       ))}
     </div>
   );
