@@ -1,7 +1,11 @@
+"use client";
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { getCategories, getTrendingArticles } from '@/lib/api';
 
 type TrendingItem = {
   slug: string;
@@ -10,21 +14,29 @@ type TrendingItem = {
   description?: string;
 };
 
+type Category = {
+  name: string;
+  slug: string;
+  section_slug?: string | null;
+  order: number;
+  is_active: boolean;
+};
+
 interface TrendingStoriesProps {
   data?: TrendingItem[];
 }
 
-export function TrendingStories({ data = [] }: TrendingStoriesProps) {
-  if (!data.length) return null;
+function TrendingBox({ title, items }: { title: string; items: TrendingItem[] }) {
+  if (!items.length) return null;
 
   return (
     <Card className="bg-[#EC1B25] text-primary-foreground border-none rounded-3xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold font-headline">Trending Story</CardTitle>
+        <CardTitle className="text-2xl font-bold font-headline">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
-          {data.map((article, index) => (
+          {items.map((article, index) => (
             <li key={article.slug}>
               <Link href={`/article/${article.slug}`} className="group block">
                 <div className="space-y-2">
@@ -41,11 +53,52 @@ export function TrendingStories({ data = [] }: TrendingStoriesProps) {
                   )}
                 </div>
               </Link>
-              {index < data.length - 1 && <Separator className="mt-4 bg-primary-foreground/20" />}
+              {index < items.length - 1 && <Separator className="mt-4 bg-primary-foreground/20" />}
             </li>
           ))}
         </ul>
       </CardContent>
     </Card>
+  );
+}
+
+export function TrendingStories({ data = [] }: TrendingStoriesProps) {
+  const [categoryBoxes, setCategoryBoxes] = useState<{ category: Category; items: TrendingItem[] }[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getCategories()
+      .then(async (categories: Category[]) => {
+        if (!Array.isArray(categories) || cancelled) return;
+
+        const results = await Promise.all(
+          categories.map(async (category) => ({
+            category,
+            items: await getTrendingArticles(category.slug),
+          }))
+        );
+
+        if (!cancelled) {
+          setCategoryBoxes(
+            results.filter((r) => Array.isArray(r.items) && r.items.length > 0)
+          );
+        }
+      })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
+  }, []);
+
+  if (!data.length && categoryBoxes.length === 0) return null;
+
+  return (
+    <div className="space-y-8">
+      <TrendingBox title="Trending Story" items={data} />
+
+      {categoryBoxes.map(({ category, items }) => (
+        <TrendingBox key={category.slug} title={`Trending Stories in ${category.name}`} items={items} />
+      ))}
+    </div>
   );
 }
