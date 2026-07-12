@@ -11,7 +11,6 @@ import { BarometerSidebar } from '@/components/barometer-sidebar';
 import {
   getMainArticle,
   getRelatedArticles,
-  getGlobalTrending,
 } from '@/lib/api';
 
 type Article = {
@@ -28,7 +27,6 @@ type Article = {
 export default async function Home() {
   let mainArticle: Article | null = null;
   let relatedArticles: Article[] = [];
-  let trending: Article[] = [];
 
   try {
     // ✅ FETCH MAIN ARTICLE
@@ -52,8 +50,6 @@ export default async function Home() {
       ? await getRelatedArticles(main.slug)
       : [];
 
-    const trendingRes = await getGlobalTrending(6);
-
     const relatedData = Array.isArray(relatedRes) ? relatedRes : [];
 
     relatedArticles = relatedData.map((item: any, index: number) => ({
@@ -65,20 +61,6 @@ export default async function Home() {
       slug: item.slug,
       publishedAt: item.published_at,
     }));
-
-    const trendingData = Array.isArray(trendingRes) ? trendingRes : [];
-
-    trending = trendingData
-      .filter((item: any) => item.slug)
-      .map((item: any) => ({
-        id: item.slug,
-        title: item.title,
-        description: item.description,
-        image: item.image?.url || "/fallback.jpg",
-        imageCredit: item.image?.credit || '',
-        slug: item.slug,
-        domain_slug: item.domain_slug,
-      }));
 
   } catch (error) {
     console.error("❌ API ERROR:", error);
@@ -150,8 +132,7 @@ export default async function Home() {
             <div className="sticky top-8 space-y-8">
               <BarometerSidebar />
 
-              {/* ✅ ONLY ONE */}
-              <TrendingStories data={trending} />
+              <TrendingStories />
             </div>
           </aside>
         </div>
