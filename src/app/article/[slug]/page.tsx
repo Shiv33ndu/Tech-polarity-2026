@@ -6,7 +6,7 @@ import sanitizeHtml from 'sanitize-html';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { RelatedArticles } from '@/components/related-articles';
-import { TrendingStories } from '@/components/trending-stories';
+import { MoreInCategory } from '@/components/more-in-category';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,8 @@ import {
 } from '@/lib/api';
 import { ArticleAudioPlayer } from '@/components/article-audio-player';
 
+const MAX_TRENDING_ARTICLES = 30;
+
 export default async function ArticlePage({
   params,
 }: {
@@ -26,6 +28,7 @@ export default async function ArticlePage({
   let article: any = null;
   let trending: any[] = [];
   let related: any[] = [];
+  let trendingArticles: any[] = [];
 
   try {
     const [articleRes, trendingRes, relatedRes] = await Promise.all([
@@ -52,6 +55,21 @@ export default async function ArticlePage({
 
     const trendingData = Array.isArray(trendingRes) ? trendingRes : [];
     trending = trendingData.filter((item: any) => item.slug);
+
+    // ✅ ENRICH TRENDING ITEMS WITH IMAGES (fetch cap, revealed progressively via Load More)
+    const trendingSlugs = trending.slice(0, MAX_TRENDING_ARTICLES);
+    const trendingDetails = await Promise.all(
+      trendingSlugs.map((item: any) => getArticleBySlug(item.slug).catch(() => null))
+    );
+    trendingArticles = trendingSlugs.map((item: any, index: number) => ({
+      id: item.slug || index,
+      title: item.title,
+      description: item.description || '',
+      image: trendingDetails[index]?.image?.url || '/fallback.jpg',
+      imageCredit: trendingDetails[index]?.image?.credit || '',
+      slug: item.slug,
+      publishedAt: trendingDetails[index]?.published_at,
+    }));
 
     const relatedData = Array.isArray(relatedRes) ? relatedRes : [];
     related = relatedData.map((item: any, index: number) => ({
@@ -194,14 +212,14 @@ export default async function ArticlePage({
 
               <RelatedArticles data={related} />
 
-              {trending.length > 0 && (
+              {trendingArticles.length > 0 && (
                 <div className="max-w-4xl mx-auto mt-16">
                   <Separator />
                   <div className="my-8">
                     <h2 className="text-3xl font-bold font-headline mb-8 text-center">
                       More in {article.category}
                     </h2>
-                    <TrendingStories data={trending} />
+                    <MoreInCategory articles={trendingArticles} />
                   </div>
                 </div>
               )}
