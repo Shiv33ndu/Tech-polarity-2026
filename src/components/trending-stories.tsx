@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { getSections, getTrendingArticles } from '@/lib/api';
+import { getSections, getTrendingArticles, getArticlesBySection } from '@/lib/api';
 
 type TrendingItem = {
   slug: string;
@@ -72,10 +72,17 @@ export function TrendingStories({ data = [] }: TrendingStoriesProps) {
         if (!Array.isArray(sections) || cancelled) return;
 
         const results = await Promise.all(
-          sections.map(async (section) => ({
-            section,
-            items: await getTrendingArticles(section.slug),
-          }))
+          sections.map(async (section) => {
+            const trending = await getTrendingArticles(section.slug);
+            if (Array.isArray(trending) && trending.length > 0) {
+              return { section, items: trending };
+            }
+
+            // Fall back to the section's latest articles so every
+            // header section always gets its own box.
+            const latest = await getArticlesBySection(section.slug, 1, 5);
+            return { section, items: latest.items || [] };
+          })
         );
 
         if (!cancelled) {
