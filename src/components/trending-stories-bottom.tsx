@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import { ArticleCard } from "./article-card";
 
-const AUTOPLAY_INTERVAL_MS = 5000;
+const AUTOPLAY_INTERVAL_MS = 3000;
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
