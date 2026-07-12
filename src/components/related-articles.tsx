@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { ArticleCard } from './article-card';
 import { Separator } from './ui/separator';
 import {
@@ -8,7 +9,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
+
+const AUTOPLAY_INTERVAL_MS = 3000;
 
 type Article = {
   id: string | number;
@@ -25,6 +29,21 @@ interface RelatedArticlesProps {
 }
 
 export function RelatedArticles({ data = [] }: RelatedArticlesProps) {
+  const [api, setApi] = useState<CarouselApi>();
+  const isPausedRef = useRef(false);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      if (!isPausedRef.current) {
+        api.scrollNext();
+      }
+    }, AUTOPLAY_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [api]);
+
   if (!data.length) return null;
 
   return (
@@ -35,6 +54,9 @@ export function RelatedArticles({ data = [] }: RelatedArticlesProps) {
         <Carousel
           opts={{ align: "start", loop: true }}
           className="w-full"
+          setApi={setApi}
+          onMouseEnter={() => { isPausedRef.current = true; }}
+          onMouseLeave={() => { isPausedRef.current = false; }}
         >
           <CarouselContent className="-ml-4 items-stretch">
             {data.map((article) => (
