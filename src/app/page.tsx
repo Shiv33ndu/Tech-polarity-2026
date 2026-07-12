@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategoryNav } from '@/components/category-nav';
@@ -87,10 +88,17 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mb-6 text-[#EC1B25] leading-tight">
-          Tech Made Simple
-        </h1>
+      <main className="flex-grow container mx-auto px-10 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="relative w-full max-w-2xl mx-auto mb-4 sm:mb-8 aspect-[839/158]">
+          <Image
+            src="/header.png"
+            alt="Tech Polarity"
+            fill
+            priority
+            className="object-contain"
+            sizes="(max-width: 768px) 90vw, 672px"
+          />
+        </div>
 
         <CategoryNav />
 
