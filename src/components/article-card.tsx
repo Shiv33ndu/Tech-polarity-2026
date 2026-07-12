@@ -21,12 +21,16 @@ interface ArticleCardProps {
   article: Article;
   isLarge?: boolean;
   layout?: 'vertical' | 'horizontal';
+  compact?: boolean;
 }
+
+const COMPACT_DESCRIPTION_LIMIT = 80;
 
 export function ArticleCard({
   article,
   isLarge = false,
   layout = 'vertical',
+  compact = false,
 }: ArticleCardProps) {
 
   const initialImage =
@@ -100,18 +104,24 @@ export function ArticleCard({
   // =========================
   // 🔥 VERTICAL
   // =========================
-  const titleSize = isLarge ? 'text-2xl md:text-3xl' : 'text-lg';
+  const titleSize = isLarge ? 'text-2xl md:text-3xl' : compact ? 'text-base' : 'text-lg';
+
+  const fullDescription = article.description || 'No description available';
+  const isDescriptionLong = compact && fullDescription.length > COMPACT_DESCRIPTION_LIMIT;
+  const displayDescription = isDescriptionLong
+    ? `${fullDescription.slice(0, COMPACT_DESCRIPTION_LIMIT).trimEnd()}…`
+    : fullDescription;
 
   return (
     <Link href={`/article/${article.slug}`} className="group block">
-      <Card className={cn(cardClasses, 'border')}>
-        <div className="relative aspect-[4/3] w-full">
+      <Card className={cn(cardClasses, 'border', compact && 'shadow-[0_8px_20px_rgba(0,0,0,0.1)]')}>
+        <div className={`relative w-full ${compact ? 'aspect-[45/22]' : 'aspect-[4/3]'}`}>
           <Image
             src={imgSrc}
             alt={article.title || 'Article Image'}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className={`object-cover ${compact ? 'object-top' : ''} transition-transform duration-300 group-hover:scale-105`}
             onError={() => setImgSrc('/fallback.jpg')}
           />
           {article.imageCredit && (
@@ -121,7 +131,7 @@ export function ArticleCard({
           )}
         </div>
 
-        <CardContent className={`p-4 ${isLarge ? 'md:p-6' : ''}`}>
+        <CardContent className={`${compact ? 'p-3' : 'p-4'} ${isLarge ? 'md:p-6' : ''}`}>
           <h3
             className={`font-bold font-headline group-hover:text-[#EC1B25] transition-colors ${titleSize}`}
           >
@@ -130,10 +140,15 @@ export function ArticleCard({
 
           <p
             className={`text-muted-foreground text-sm mt-2 ${
-              isLarge ? '' : 'hidden md:block'
+              isLarge || compact ? '' : 'hidden md:block'
             }`}
           >
-            {article.description || 'No description available'}
+            {displayDescription}
+            {isDescriptionLong && (
+              <span className="text-[#EC1B25] font-semibold ml-1 whitespace-nowrap">
+                Read more
+              </span>
+            )}
           </p>
 
           {formattedDate && (
