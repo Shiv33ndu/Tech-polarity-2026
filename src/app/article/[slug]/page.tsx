@@ -15,6 +15,7 @@ import {
   getArticleBySlug,
   getArticleTrending,
   getArticleRelated,
+  getCategories,
 } from '@/lib/api';
 import { ArticleAudioPlayer } from '@/components/article-audio-player';
 import { ShareButton } from '@/components/share-button';
@@ -32,13 +33,22 @@ export default async function ArticlePage({
   let trendingArticles: any[] = [];
 
   try {
-    const [articleRes, trendingRes, relatedRes] = await Promise.all([
+    const [articleRes, trendingRes, relatedRes, categoriesRes] = await Promise.all([
       getArticleBySlug(params.slug),
       getArticleTrending(params.slug),
       getArticleRelated(params.slug),
+      getCategories(),
     ]);
 
     if (!articleRes) throw new Error("Article not found");
+
+    // domain_slug is the category's URL slug (e.g. "mac-os", "gta-vi"), not
+    // a display name — look up the real subcategory name from the nav list
+    // so the badge doesn't just show the slug with dashes.
+    const categories = Array.isArray(categoriesRes) ? categoriesRes : [];
+    const subcategoryName = categories.find(
+      (c: any) => c.slug === articleRes.domain_slug
+    )?.name;
 
     article = {
       id: articleRes.slug,
@@ -48,7 +58,10 @@ export default async function ArticlePage({
       image: articleRes.image?.url || '/fallback.jpg',
       imageCredit: articleRes.image?.credit || '',
       slug: articleRes.slug,
-      category: articleRes.domain_slug || 'Tech',
+      category:
+        subcategoryName ||
+        articleRes.domain_slug?.replace(/-/g, ' ') ||
+        'Tech',
       publishedAt: articleRes.published_at,
       tags: articleRes.tags || [],
       content: articleRes.content || '',
