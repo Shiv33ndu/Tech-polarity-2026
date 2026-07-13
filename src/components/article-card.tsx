@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { MiniAudioButton } from '@/components/mini-audio-button';
+import { ShareButton } from '@/components/share-button';
 
 interface Article {
   id: string | number;
@@ -102,10 +103,17 @@ export function ArticleCard({
                 </p>
               )}
 
-              <MiniAudioButton
-                id={article.id}
-                text={`${article.title}. ${article.description}`}
-              />
+              <div className="flex items-center gap-2 flex-wrap mt-2">
+                <MiniAudioButton
+                  id={article.id}
+                  text={`${article.title}. ${article.description}`}
+                />
+                <ShareButton
+                  title={article.title}
+                  path={`/article/${article.slug}`}
+                  iconOnly
+                />
+              </div>
             </CardContent>
           </div>
         </Card>
@@ -163,10 +171,17 @@ export function ArticleCard({
             </p>
           )}
 
-          <MiniAudioButton
-            id={article.id}
-            text={`${article.title}. ${article.description}`}
-          />
+          <div className="flex items-center gap-2 flex-wrap mt-2">
+            <MiniAudioButton
+              id={article.id}
+              text={`${article.title}. ${article.description}`}
+            />
+            <ShareButton
+              title={article.title}
+              path={`/article/${article.slug}`}
+              iconOnly
+            />
+          </div>
         </CardContent>
       </Card>
     </Link>

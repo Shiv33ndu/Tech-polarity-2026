@@ -17,6 +17,7 @@ import {
   getArticleRelated,
 } from '@/lib/api';
 import { ArticleAudioPlayer } from '@/components/article-audio-player';
+import { ShareButton } from '@/components/share-button';
 
 const MAX_TRENDING_ARTICLES = 30;
 
@@ -152,10 +153,11 @@ export default async function ArticlePage({
                   </p>
                 </header>
 
-                <div className="mb-8">
+                <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
                   <ArticleAudioPlayer
                     text={`${article.title}. ${article.description}. ${plainTextContent}`}
                   />
+                  <ShareButton title={article.title} path={`/article/${article.slug}`} />
                 </div>
 
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg mb-8">

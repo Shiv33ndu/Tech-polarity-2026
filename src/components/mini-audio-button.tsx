@@ -99,7 +99,7 @@ export function MiniAudioButton({ id, text }: MiniAudioButtonProps) {
     <button
       onClick={toggle}
       title={playing ? "Stop" : "Listen to article"}
-      className={`flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-colors mt-2 w-fit ${
+      className={`flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-colors w-fit ${
         playing
           ? "bg-[#EC1B25] text-white hover:bg-[#c9151e]"
           : "bg-secondary text-muted-foreground hover:bg-secondary/80"
