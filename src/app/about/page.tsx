@@ -1,10 +1,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: 'Learn more about TechPolarity and our mission to bring people together through technology.',
+  alternates: { canonical: '/about' },
+};
 
 export default function AboutPage() {
 

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { ArrowLeft, Tag } from 'lucide-react';
 import sanitizeHtml from 'sanitize-html';
 
@@ -19,8 +20,47 @@ import {
 } from '@/lib/api';
 import { ArticleAudioPlayer } from '@/components/article-audio-player';
 import { ShareButton } from '@/components/share-button';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 const MAX_TRENDING_ARTICLES = 30;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const article = await getArticleBySlug(params.slug);
+
+  if (!article) {
+    return { title: 'Article not found' };
+  }
+
+  const title = article.title;
+  const description = article.description || SITE_NAME;
+  const imageUrl = article.image?.url;
+  const url = `${SITE_URL}/article/${article.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      publishedTime: article.published_at,
+      tags: article.tags || [],
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+  };
+}
 
 export default async function ArticlePage({
   params,
@@ -135,8 +175,31 @@ export default async function ArticlePage({
     ? article.content.replace(/<[^>]*>/g, ' ').replace(/\s{2,}/g, ' ').trim()
     : '';
 
+  const articleUrl = `${SITE_URL}/article/${article.slug}`;
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.description,
+    image: article.image ? [article.image] : undefined,
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+    author: { '@type': 'Organization', name: SITE_NAME },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo_main.png` },
+    },
+    keywords: article.tags?.length ? article.tags.join(', ') : undefined,
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header />
 
       <main className="flex-grow py-4 sm:py-8">

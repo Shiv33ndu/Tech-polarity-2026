@@ -8,7 +8,7 @@ export async function getMainArticle() {
     const res = await fetch(
       `${BASE_URL}/api/v1/home/main-article`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -36,7 +36,7 @@ export async function getRelatedArticles(slug?: string, limit: number = 8) {
     const res = await fetch(
       `${BASE_URL}/api/v1/home/related-articles?exclude_slug=${slug}&limit=${limit}`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -60,7 +60,7 @@ export async function getTrendingArticles(domainSlug?: string) {
     const res = await fetch(
       `${BASE_URL}/api/v1/home/trending?domain_slug=${domainSlug}&limit=5`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -129,7 +129,7 @@ export async function getArticleBySlug(slug: string) {
     const res = await fetch(
       `${BASE_URL}/api/v1/articles/${slug}`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -151,7 +151,7 @@ export async function getArticleTrending(slug: string) {
     const res = await fetch(
       `${BASE_URL}/api/v1/articles/${slug}/trending`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -173,7 +173,7 @@ export async function getArticleRelated(slug: string) {
     const res = await fetch(
       `${BASE_URL}/api/v1/articles/${slug}/related`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -194,7 +194,7 @@ export async function getTechBarometer() {
     const res = await fetch(
       `${BASE_URL}/api/v1/home/tech-barometer`,
       {
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
@@ -233,7 +233,7 @@ export async function getArticlesByCategory(
   try {
     const res = await fetch(
       `${BASE_URL}/api/v1/articles/category/${domainSlug}?page=${page}&limit=${limit}`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } }
     );
 
     if (!res.ok) return { items: [], total: 0, page, limit };
@@ -271,7 +271,7 @@ export async function getArticlesBySection(
   try {
     const res = await fetch(
       `${BASE_URL}/api/v1/articles/section/${sectionSlug}?page=${page}&limit=${limit}`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } }
     );
 
     if (!res.ok) return { items: [], total: 0, page, limit };
@@ -312,7 +312,7 @@ export async function getGlobalTrending(limit: number = 8) {
   try {
     const res = await fetch(
       `${BASE_URL}/api/v1/home/trending-global?limit=${limit}`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } }
     );
 
     if (!res.ok) return [];

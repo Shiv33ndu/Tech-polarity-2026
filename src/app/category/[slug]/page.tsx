@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ArticleCard } from '@/components/article-card';
 import { Button } from '@/components/ui/button';
 import { getArticlesByCategory, getCategories } from '@/lib/api';
+import { SITE_URL } from '@/lib/site';
 
 type Article = {
   id: string | number;
@@ -15,6 +17,31 @@ type Article = {
   slug: string;
   publishedAt?: string;
 };
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { page?: string };
+}): Promise<Metadata> {
+  const categories = await getCategories();
+  const category = (Array.isArray(categories) ? categories : []).find(
+    (c: any) => c.slug === params.slug
+  );
+  const name = category?.name || params.slug.replace(/-/g, ' ');
+  const page = parseInt(searchParams.page || '1', 10);
+  const title = `${name} News${page > 1 ? ` – Page ${page}` : ''}`;
+  const description = `Latest ${name} news, articles, and updates from TechPolarity.`;
+  const canonicalPath = `/category/${params.slug}${page > 1 ? `?page=${page}` : ''}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: `${SITE_URL}${canonicalPath}` },
+  };
+}
 
 export default async function CategoryPage({
   params,

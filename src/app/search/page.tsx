@@ -13,6 +13,7 @@ export async function generateMetadata({
   const { q } = await searchParams;
   return {
     title: q ? `"${q}" – Search – TechPolarity` : 'Search – TechPolarity',
+    robots: { index: false, follow: true },
   };
 }
 

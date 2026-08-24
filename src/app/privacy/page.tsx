@@ -1,10 +1,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Read the TechPolarity privacy policy to learn how we collect, use, and protect your data.',
+  alternates: { canonical: '/privacy' },
+};
 
 export default function PrivacyPage() {
 

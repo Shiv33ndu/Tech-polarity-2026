@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategoryNav } from '@/components/category-nav';
@@ -13,6 +14,13 @@ import {
   getMainArticle,
   getRelatedArticles,
 } from '@/lib/api';
+import { SITE_DESCRIPTION } from '@/lib/site';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  description: SITE_DESCRIPTION,
+  openGraph: { url: '/' },
+};
 
 type Article = {
   id: string | number;
@@ -76,6 +84,10 @@ export default async function Home() {
       <Header />
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <h1 className="sr-only">
+          TechPolarity — Technology News, Reviews &amp; Insights
+        </h1>
+
         <div className="relative w-full max-w-2xl mx-auto mb-10 sm:mb-16 aspect-[839/158]">
           <Image
             src="/header.png"
