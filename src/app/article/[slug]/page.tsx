@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { ArrowLeft, Tag } from 'lucide-react';
 import sanitizeHtml from 'sanitize-html';
 
@@ -27,12 +28,13 @@ const MAX_TRENDING_ARTICLES = 30;
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const article = await getArticleBySlug(params.slug);
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
-    return { title: 'Article not found' };
+    return { title: 'Article not found', robots: { index: false, follow: false } };
   }
 
   const title = article.title;
@@ -65,8 +67,9 @@ export async function generateMetadata({
 export default async function ArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   let article: any = null;
   let trending: any[] = [];
   let related: any[] = [];
@@ -74,9 +77,9 @@ export default async function ArticlePage({
 
   try {
     const [articleRes, trendingRes, relatedRes, categoriesRes] = await Promise.all([
-      getArticleBySlug(params.slug),
-      getArticleTrending(params.slug),
-      getArticleRelated(params.slug),
+      getArticleBySlug(slug),
+      getArticleTrending(slug),
+      getArticleRelated(slug),
       getCategories(),
     ]);
 
@@ -141,16 +144,7 @@ export default async function ArticlePage({
   }
 
   if (!article) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center">
-        <h1 className="text-4xl font-bold mb-4">Article not found</h1>
-        <Button asChild>
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Go back home
-          </Link>
-        </Button>
-      </div>
-    );
+    notFound();
   }
 
   const formattedDate = article.publishedAt

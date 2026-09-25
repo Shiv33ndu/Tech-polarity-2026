@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -22,18 +23,20 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
+  const { page: pageParam } = await searchParams;
   const sections = await getSections();
   const section = (Array.isArray(sections) ? sections : []).find(
-    (s: any) => s.slug === params.slug
+    (s: any) => s.slug === slug
   );
-  const name = section?.name || params.slug.replace(/-/g, ' ');
-  const page = parseInt(searchParams.page || '1', 10);
+  const name = section?.name || slug.replace(/-/g, ' ');
+  const page = parseInt(pageParam || '1', 10);
   const title = `${name}${page > 1 ? ` – Page ${page}` : ''}`;
   const description = `Latest ${name} news, articles, and updates from TechPolarity.`;
-  const canonicalPath = `/section/${params.slug}${page > 1 ? `?page=${page}` : ''}`;
+  const canonicalPath = `/section/${slug}${page > 1 ? `?page=${page}` : ''}`;
 
   return {
     title,
@@ -47,19 +50,29 @@ export default async function SectionPage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = parseInt(searchParams.page || '1', 10);
+  const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = parseInt(pageParam || '1', 10);
   const limit = 12;
 
   const [sectionsRes, data] = await Promise.all([
     getSections(),
-    getArticlesBySection(params.slug, page, limit),
+    getArticlesBySection(slug, page, limit),
   ]);
 
-  const section = sectionsRes.find((s: any) => s.slug === params.slug);
-  const sectionName = section?.name || params.slug;
+  const sections = Array.isArray(sectionsRes) ? sectionsRes : [];
+  const section = sections.find((s: any) => s.slug === slug);
+
+  // Only 404 when the sections list loaded successfully and the slug truly
+  // isn't one of them — an empty list usually means the sections fetch failed.
+  if (sections.length > 0 && !section) {
+    notFound();
+  }
+
+  const sectionName = section?.name || slug;
 
   const items: Article[] = (data.items || []).map((item: any, index: number) => ({
     id: item.slug || index,
@@ -75,7 +88,7 @@ export default async function SectionPage({
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header activeSection={params.slug} />
+      <Header activeSection={slug} />
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -108,7 +121,7 @@ export default async function SectionPage({
               <div className="flex justify-center items-center gap-3 mt-12">
                 {page > 1 && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/section/${params.slug}?page=${page - 1}`}>
+                    <Link href={`/section/${slug}?page=${page - 1}`}>
                       Previous
                     </Link>
                   </Button>
@@ -120,7 +133,7 @@ export default async function SectionPage({
 
                 {page < totalPages && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/section/${params.slug}?page=${page + 1}`}>
+                    <Link href={`/section/${slug}?page=${page + 1}`}>
                       Next
                     </Link>
                   </Button>

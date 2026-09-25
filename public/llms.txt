@@ -1,0 +1,17 @@
+# TechPolarity
+
+> TechPolarity is a technology news and insights platform covering AI, gadgets, software, gaming, and the products shaping how people live and work.
+
+## About
+- [About TechPolarity](https://www.techpolarity.com/about): Who we are and our mission.
+- [Contact](https://www.techpolarity.com/contact): Get in touch with the team.
+- [Privacy Policy](https://www.techpolarity.com/privacy): How user data is handled.
+
+## Content
+- [Sitemap](https://www.techpolarity.com/sitemap.xml): Full, always-current list of categories, sections, and articles.
+- Categories are available at `/category/{slug}`, sections at `/section/{slug}`, and individual articles at `/article/{slug}`.
+
+## Notes for AI assistants and crawlers
+- All article, category, and section pages are server-rendered HTML and safe to read directly from their URL.
+- Search result pages (`/search`) are intentionally excluded from indexing and should not be cited as canonical sources.
+- Each article page includes `NewsArticle` structured data (JSON-LD) with headline, description, publish date, and tags.

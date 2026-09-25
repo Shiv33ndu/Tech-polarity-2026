@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -22,18 +23,20 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
+  const { page: pageParam } = await searchParams;
   const categories = await getCategories();
   const category = (Array.isArray(categories) ? categories : []).find(
-    (c: any) => c.slug === params.slug
+    (c: any) => c.slug === slug
   );
-  const name = category?.name || params.slug.replace(/-/g, ' ');
-  const page = parseInt(searchParams.page || '1', 10);
+  const name = category?.name || slug.replace(/-/g, ' ');
+  const page = parseInt(pageParam || '1', 10);
   const title = `${name} News${page > 1 ? ` – Page ${page}` : ''}`;
   const description = `Latest ${name} news, articles, and updates from TechPolarity.`;
-  const canonicalPath = `/category/${params.slug}${page > 1 ? `?page=${page}` : ''}`;
+  const canonicalPath = `/category/${slug}${page > 1 ? `?page=${page}` : ''}`;
 
   return {
     title,
@@ -47,19 +50,30 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = parseInt(searchParams.page || '1', 10);
+  const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = parseInt(pageParam || '1', 10);
   const limit = 12;
 
   const [categoriesRes, data] = await Promise.all([
     getCategories(),
-    getArticlesByCategory(params.slug, page, limit),
+    getArticlesByCategory(slug, page, limit),
   ]);
 
-  const category = categoriesRes.find((c: any) => c.slug === params.slug);
-  const categoryName = category?.name || params.slug;
+  const categories = Array.isArray(categoriesRes) ? categoriesRes : [];
+  const category = categories.find((c: any) => c.slug === slug);
+
+  // Only 404 when the category list loaded successfully and the slug truly
+  // isn't one of them — an empty list usually means the categories fetch
+  // failed, not that the category doesn't exist.
+  if (categories.length > 0 && !category) {
+    notFound();
+  }
+
+  const categoryName = category?.name || slug;
 
   const items: Article[] = (data.items || []).map((item: any, index: number) => ({
     id: item.slug || index,
@@ -106,7 +120,7 @@ export default async function CategoryPage({
               <div className="flex justify-center items-center gap-3 mt-12">
                 {page > 1 && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/category/${params.slug}?page=${page - 1}`}>
+                    <Link href={`/category/${slug}?page=${page - 1}`}>
                       Previous
                     </Link>
                   </Button>
@@ -118,7 +132,7 @@ export default async function CategoryPage({
 
                 {page < totalPages && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/category/${params.slug}?page=${page + 1}`}>
+                    <Link href={`/category/${slug}?page=${page + 1}`}>
                       Next
                     </Link>
                   </Button>
