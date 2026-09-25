@@ -1,5 +1,5 @@
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://techpolarity.com'
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.techpolarity.com'
 ).replace(/\/$/, '');
 
 export const SITE_NAME = 'TechPolarity';
