@@ -35,6 +35,13 @@ export default async function SearchPage({
 
   if (query.trim().length >= 2) {
     results = await searchArticles(query.trim(), page, limit);
+    results = {
+      ...results,
+      items: [...results.items].sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+      ),
+    };
   }
 
   const totalPages = Math.ceil(results.total / limit);
