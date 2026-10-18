@@ -56,6 +56,11 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} scroll-smooth`}>
       <head>
         <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1071587412276448"
+          crossOrigin="anonymous"
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
