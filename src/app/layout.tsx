@@ -36,6 +36,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  other: {
+    'google-adsense-account': 'ca-pub-1071587412276448',
+  },
 };
 
 const organizationJsonLd = {
