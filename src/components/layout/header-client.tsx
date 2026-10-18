@@ -390,9 +390,10 @@ export function HeaderClient({
 
           {/* LEFT */}
           <div className="w-[220px] flex items-center">
-            <Link href="/" className="flex items-center">
+            {/* Plain anchor (not next/link) so clicking the logo does a full page reload */}
+            <a href="/" className="flex items-center">
               <LogoText />
-            </Link>
+            </a>
           </div>
 
           {/* RIGHT — nav + search */}
