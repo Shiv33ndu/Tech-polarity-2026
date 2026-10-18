@@ -8,6 +8,8 @@ import { ArticleCard } from '@/components/article-card';
 import { Button } from '@/components/ui/button';
 import { getArticlesBySection, getSections } from '@/lib/api';
 import { SITE_URL } from '@/lib/site';
+import { SortFilter } from '@/components/sort-filter';
+import { parseSort, sortArticles, SORT_FETCH_LIMIT } from '@/lib/sort';
 
 type Article = {
   id: string | number;
@@ -51,16 +53,17 @@ export default async function SectionPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; sort?: string }>;
 }) {
   const { slug } = await params;
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, sort: sortParam } = await searchParams;
   const page = parseInt(pageParam || '1', 10);
   const limit = 12;
+  const sort = parseSort(sortParam);
 
   const [sectionsRes, data] = await Promise.all([
     getSections(),
-    getArticlesBySection(slug, page, limit),
+    getArticlesBySection(slug, 1, SORT_FETCH_LIMIT),
   ]);
 
   const sections = Array.isArray(sectionsRes) ? sectionsRes : [];
@@ -74,7 +77,7 @@ export default async function SectionPage({
 
   const sectionName = section?.name || slug;
 
-  const items: Article[] = (data.items || []).map((item: any, index: number) => ({
+  const allItems: Article[] = sortArticles(data.items || [], sort).map((item: any, index: number) => ({
     id: item.slug || index,
     title: item.title,
     description: item.description || '',
@@ -84,7 +87,8 @@ export default async function SectionPage({
     publishedAt: item.published_at,
   }));
 
-  const totalPages = Math.ceil((data.total || 0) / limit);
+  const items = allItems.slice((page - 1) * limit, page * limit);
+  const totalPages = Math.ceil(allItems.length / limit);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -99,6 +103,10 @@ export default async function SectionPage({
             </h1>
           </div>
         </div>
+
+        {allItems.length > 1 && (
+          <SortFilter basePath={`/section/${slug}`} active={sort} />
+        )}
 
         {items.length === 0 ? (
           <div className="text-center py-24">
@@ -121,7 +129,7 @@ export default async function SectionPage({
               <div className="flex justify-center items-center gap-3 mt-12">
                 {page > 1 && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/section/${slug}?page=${page - 1}`}>
+                    <Link href={`/section/${slug}?sort=${sort}&page=${page - 1}`}>
                       Previous
                     </Link>
                   </Button>
@@ -133,7 +141,7 @@ export default async function SectionPage({
 
                 {page < totalPages && (
                   <Button asChild variant="outline" className="rounded-full">
-                    <Link href={`/section/${slug}?page=${page + 1}`}>
+                    <Link href={`/section/${slug}?sort=${sort}&page=${page + 1}`}>
                       Next
                     </Link>
                   </Button>
