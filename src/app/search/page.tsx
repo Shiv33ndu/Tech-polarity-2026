@@ -17,44 +17,14 @@ export async function generateMetadata({
   };
 }
 
-const SORT_OPTIONS = [
-  { value: 'new', label: 'New to old' },
-  { value: 'old', label: 'Old to new' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'updated', label: 'Recently Updated' },
-] as const;
-
-type SortValue = (typeof SORT_OPTIONS)[number]['value'];
-
-const time = (d?: string) => (d ? new Date(d).getTime() : 0);
-
-// Backend has no view counts, so "popular" = trending first, then relevance score.
-const SORTERS: Record<SortValue, (a: any, b: any) => number> = {
-  new: (a, b) => time(b.published_at) - time(a.published_at),
-  old: (a, b) => time(a.published_at) - time(b.published_at),
-  updated: (a, b) =>
-    time(b.updated_at || b.published_at) - time(a.updated_at || a.published_at),
-  popular: (a, b) =>
-    Number(!!b.is_trending) - Number(!!a.is_trending) ||
-    (b.score ?? 0) - (a.score ?? 0) ||
-    time(b.published_at) - time(a.published_at),
-};
-
-// Sorting must span all matches, so fetch them in one request and paginate locally.
-const FETCH_LIMIT = 100;
-
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; page?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const { q: query = '', page: pageStr = '1', sort: sortParam } = await searchParams;
+  const { q: query = '', page: pageStr = '1' } = await searchParams;
   const page = Math.max(1, parseInt(pageStr, 10) || 1);
   const limit = 12;
-  const sort: SortValue =
-    SORT_OPTIONS.find((o) => o.value === sortParam)?.value ?? 'new';
-  const pageHref = (p: number, s: SortValue = sort) =>
-    `/search?q=${encodeURIComponent(query)}&sort=${s}&page=${p}`;
 
   let results: { items: any[]; total: number; page: number; limit: number } = {
     items: [],
@@ -64,13 +34,13 @@ export default async function SearchPage({
   };
 
   if (query.trim().length >= 2) {
-    const all = await searchArticles(query.trim(), 1, FETCH_LIMIT);
-    const sorted = [...all.items].sort(SORTERS[sort]);
+    results = await searchArticles(query.trim(), page, limit);
     results = {
-      items: sorted.slice((page - 1) * limit, page * limit),
-      total: all.total,
-      page,
-      limit,
+      ...results,
+      items: [...results.items].sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+      ),
     };
   }
 
@@ -98,27 +68,6 @@ export default async function SearchPage({
             <h1 className="text-2xl font-bold">Search</h1>
           )}
         </div>
-
-        {/* Sort options */}
-        {query.trim().length >= 2 && results.total > 0 && (
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            <span className="text-sm text-muted-foreground mr-1">Sort by:</span>
-            {SORT_OPTIONS.map((o) => (
-              <Link
-                key={o.value}
-                href={pageHref(1, o.value)}
-                className={cn(
-                  'px-3 py-1.5 rounded-full text-sm border transition-colors',
-                  o.value === sort
-                    ? 'bg-[#EC1B25] border-[#EC1B25] text-white'
-                    : 'hover:bg-secondary'
-                )}
-              >
-                {o.label}
-              </Link>
-            ))}
-          </div>
-        )}
 
         {/* Results grid */}
         {results.items.length > 0 ? (
@@ -185,7 +134,7 @@ export default async function SearchPage({
               <div className="flex justify-center items-center gap-2 mt-10">
                 {page > 1 && (
                   <Link
-                    href={pageHref(page - 1)}
+                    href={`/search?q=${encodeURIComponent(query)}&page=${page - 1}`}
                     className="px-4 py-2 rounded-lg border hover:bg-secondary transition-colors text-sm"
                   >
                     ← Prev
@@ -198,7 +147,7 @@ export default async function SearchPage({
                   return (
                     <Link
                       key={p}
-                      href={pageHref(p)}
+                      href={`/search?q=${encodeURIComponent(query)}&page=${p}`}
                       className={cn(
                         'w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors',
                         p === page
@@ -212,7 +161,7 @@ export default async function SearchPage({
                 })}
                 {page < totalPages && (
                   <Link
-                    href={pageHref(page + 1)}
+                    href={`/search?q=${encodeURIComponent(query)}&page=${page + 1}`}
                     className="px-4 py-2 rounded-lg border hover:bg-secondary transition-colors text-sm"
                   >
                     Next →
